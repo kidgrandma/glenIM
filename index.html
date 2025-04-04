@@ -1,1 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIM SmarterChild Event Bot</title>
+  <style>
+    body {
+      background-color: #c0c0c0;
+      font-family: Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #aim-chat {
+      width: 320px;
+      border: 3px solid #0055FF;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .aim-header {
+      background: #0055FF;
+      color: #fff;
+      padding: 8px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .aim-window {
+      height: 400px;
+      padding: 10px;
+      overflow-y: auto;
+      background: #F8F8F8;
+      font-size: 13px;
+    }
+    #userInput {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-top: 1px solid #ccc;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+    .message {
+      margin-bottom: 10px;
+    }
+    .sender {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
 
+<div id="aim-chat">
+  <div class="aim-header">Chatting with: SmarterChild</div>
+  <div class="aim-window" id="messages"></div>
+  <input type="text" id="userInput" placeholder="Type your message and hit enter...">
+</div>
+
+<script>
+const responses = [
+  "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
+  "BONOBO, THEE MIKE B, cool people, you—sounds like a plan!",
+  "Sorry, I only know about LOW-RES[HI-DEF] at HVW8 Gallery.",
+  "My only job: remind you about LOW-RES[HI-DEF]. RSVP ASAP!",
+  "HVW8 Gallery, 661 N. Spaulding Ave. April 9th, 6-10PM. Be there!"
+];
+
+const userInputField = document.getElementById('userInput');
+
+userInputField.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const userMessage = e.target.value.trim();
+    if(userMessage !== ''){
+      addMessage("You", userMessage);
+      e.target.value = "";
+      setTimeout(() => botReply(userMessage), 600);
+    }
+  }
+});
+
+function addMessage(sender, text) {
+  const messages = document.getElementById('messages');
+  const msgDiv = document.createElement('div');
+  msgDiv.classList.add('message');
+  msgDiv.innerHTML = `<span class="sender">${sender}:</span> ${text}`;
+  messages.appendChild(msgDiv);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function botReply(userInput) {
+  let reply;
+  const input = userInput.toLowerCase();
+
+  if (/where|when|location/.test(input)) {
+    reply = "LOW-RES[HI-DEF] at HVW8 Gallery (661 N. Spaulding Ave.) Opening reception: April 9th, 6-10PM!";
+  } else if (/who|perform|music|dj/.test(input)) {
+    reply = "Music by BONOBO and THEE MIKE B + friends. Epic lineup!";
+  } else if (/rsvp|ticket|sign up/.test(input)) {
+    reply = "Easy—just email rsvp@hvw8.com to get on the list!";
+  } else {
+    reply = responses[Math.floor(Math.random() * responses.length)];
+  }
+
+  addMessage("SmarterChild", reply);
+}
+
+// Welcome message
+window.onload = function(){
+  addMessage("SmarterChild", "Hey! I'm SmarterChild. Need info about LOW-RES[HI-DEF]? Ask me anything!");
+};
+</script>
+
+</body>
+</html>
