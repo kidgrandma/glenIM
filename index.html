@@ -1,116 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIM SmarterChild Event Bot</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sidekick Chatbot</title>
   <style>
+    /* BASIC RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      background-color: #c0c0c0;
-      font-family: Verdana, sans-serif;
+      background-color: #ddd;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      min-height: 100vh;
+      font-family: 'Verdana', sans-serif;
     }
-    #aim-chat {
-      width: 320px;
-      border: 3px solid #0055FF;
-      background: #ffffff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+
+    /* MAIN SIDEKICK WRAPPER */
+    .sidekick-frame {
+      position: relative;
+      width: 900px;     /* Approximated based on the image’s ratio */
+      height: 475px;    /* Approximated */
+      background: url('https://static-mpm-optimized.s3.eu-west-2.amazonaws.com/fc8a439c-d3bd-4c79-a372-9774810d62b7_large.png') 
+                  no-repeat center center;
+      background-size: contain; 
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      border: 2px solid #444;
     }
+
+    /* SCREEN AREA ON THE DEVICE */
+    .screen-container {
+      position: absolute;
+      /* These four values must be fine-tuned to align with the device’s screen */
+      top: 120px;     /* Move down ~120px to start at the screen area */
+      left: 200px;    /* Move right ~200px to get inside the screen bezel */
+      width: 500px;   /* Screen width on the device */
+      height: 160px;  /* Screen height */
+      background-color: #ffffff;
+      border: 2px solid #333;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
     .aim-header {
       background: #0055FF;
       color: #fff;
-      padding: 8px;
       font-weight: bold;
       font-size: 14px;
+      text-align: center;
+      padding: 6px;
     }
+
     .aim-window {
-      height: 400px;
-      padding: 10px;
-      overflow-y: auto;
+      /* Fill all space below header */
+      height: calc(100% - 32px); /* Subtract header height + padding */
       background: #F8F8F8;
+      padding: 8px;
+      overflow-y: auto;
       font-size: 13px;
+    }
+
+    /* MESSAGES */
+    .message {
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .sender {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* INPUT BELOW THE SCREEN (simulate the keyboard area) */
+    .input-container {
+      position: absolute;
+      top: 290px;   /* Just below the 160px screen’s bottom (120 + 160 = 280) + extra margin */
+      left: 200px;  /* match .screen-container’s left so it lines up nicely */
+      width: 500px;
     }
     #userInput {
       width: 100%;
       padding: 8px;
-      border: none;
-      border-top: 1px solid #ccc;
+      border: 1px solid #ccc;
+      border-radius: 4px;
       font-size: 13px;
-      box-sizing: border-box;
-    }
-    .message {
-      margin-bottom: 10px;
-    }
-    .sender {
-      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-<div id="aim-chat">
-  <div class="aim-header">Chatting with: SmarterChild</div>
-  <div class="aim-window" id="messages"></div>
-  <input type="text" id="userInput" placeholder="Type your message and hit enter...">
-</div>
+  <div class="sidekick-frame">
+    <!-- Screen area for the chat -->
+    <div class="screen-container" id="chatScreen">
+      <div class="aim-header">SmarterChild</div>
+      <div class="aim-window" id="messages"></div>
+    </div>
 
-<script>
-const responses = [
-  "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
-  "BONOBO, THEE MIKE B, cool people, you—sounds like a plan!",
-  "Sorry, I only know about LOW-RES[HI-DEF] at HVW8 Gallery.",
-  "My only job: remind you about LOW-RES[HI-DEF]. RSVP ASAP!",
-  "HVW8 Gallery, 661 N. Spaulding Ave. April 9th, 6-10PM. Be there!"
-];
+    <!-- Input field for user messages -->
+    <div class="input-container">
+      <input type="text" id="userInput" placeholder="Type message, press Enter...">
+    </div>
+  </div>
 
-const userInputField = document.getElementById('userInput');
+  <script>
+    // Basic fallback responses
+    const responses = [
+      \"Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!\",
+      \"BONOBO, THEE MIKE B, you—party time.\",
+      \"I only know about LOW-RES[HI-DEF]. That’s my job.\",
+      \"RSVP or regret it—your choice.\",
+      \"Location: HVW8 Gallery, 661 N. Spaulding Ave. April 9th, 6-10PM.\"
+    ];
 
-userInputField.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    const userMessage = e.target.value.trim();
-    if(userMessage !== ''){
-      addMessage("You", userMessage);
-      e.target.value = "";
-      setTimeout(() => botReply(userMessage), 600);
+    const userInputField = document.getElementById('userInput');
+
+    userInputField.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        const userMessage = e.target.value.trim();
+        if (userMessage !== '') {
+          addMessage(\"You\", userMessage);
+          e.target.value = \"\";
+          setTimeout(() => botReply(userMessage), 600);
+        }
+      }
+    });
+
+    function addMessage(sender, text) {
+      const messagesEl = document.getElementById('messages');
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message');
+      msgDiv.innerHTML = `<span class='sender'>${sender}:</span>${text}`;
+      messagesEl.appendChild(msgDiv);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
     }
-  }
-});
 
-function addMessage(sender, text) {
-  const messages = document.getElementById('messages');
-  const msgDiv = document.createElement('div');
-  msgDiv.classList.add('message');
-  msgDiv.innerHTML = `<span class="sender">${sender}:</span> ${text}`;
-  messages.appendChild(msgDiv);
-  messages.scrollTop = messages.scrollHeight;
-}
+    function botReply(userInput) {
+      const input = userInput.toLowerCase();
+      let reply;
 
-function botReply(userInput) {
-  let reply;
-  const input = userInput.toLowerCase();
+      if (/where|when|location/.test(input)) {
+        reply = \"LOW-RES[HI-DEF] at HVW8 Gallery. April 9th, 6-10PM!\";
+      } else if (/who|perform|music|dj|artist/.test(input)) {
+        reply = \"BONOBO & THEE MIKE B headlining—plus more!\";        
+      } else if (/rsvp|ticket|sign up|list/.test(input)) {
+        reply = \"Just email rsvp@hvw8.com, easy as that!\";
+      } else {
+        reply = responses[Math.floor(Math.random() * responses.length)];
+      }
 
-  if (/where|when|location/.test(input)) {
-    reply = "LOW-RES[HI-DEF] at HVW8 Gallery (661 N. Spaulding Ave.) Opening reception: April 9th, 6-10PM!";
-  } else if (/who|perform|music|dj/.test(input)) {
-    reply = "Music by BONOBO and THEE MIKE B + friends. Epic lineup!";
-  } else if (/rsvp|ticket|sign up/.test(input)) {
-    reply = "Easy—just email rsvp@hvw8.com to get on the list!";
-  } else {
-    reply = responses[Math.floor(Math.random() * responses.length)];
-  }
+      addMessage(\"SmarterChild\", reply);
+    }
 
-  addMessage("SmarterChild", reply);
-}
-
-// Welcome message
-window.onload = function(){
-  addMessage("SmarterChild", "Hey! I'm SmarterChild. Need info about LOW-RES[HI-DEF]? Ask me anything!");
-};
-</script>
-
+    // Greeting message on load
+    window.addEventListener('load', () => {
+      addMessage(\"SmarterChild\", \"Hey there! This is your T-Mobile Sidekick. Ask me about the event!\");
+    });
+  </script>
 </body>
 </html>
