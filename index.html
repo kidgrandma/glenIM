@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>GLENJAMN INSTANT MESSENGER</title>
-      <link rel="icon" type="image/x-icon" href="images/glenfavico.ico">
+  <link rel="icon" type="image/x-icon" href="images/glenfavico.ico">
+  <!-- Ensures mobile devices scale correctly -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* RESET */
@@ -16,6 +17,8 @@
     /* PAGE BACKGROUND */
     body {
       background: url("images/glenbackground.png") center/cover no-repeat;
+      /* Helps avoid scroll issues on iOS Safari */
+      overflow-x: hidden;
     }
 
     /* CENTER THE PHONE */
@@ -24,14 +27,17 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      /* small padding so phone isn't flush with edges on very small screens */
+      padding: 8px;
     }
 
     /* PHONE WRAPPER WITH ASPECT RATIO */
     .wrapper {
       position: relative;
-      aspect-ratio: 1366 / 1080;  /* Example phone ratio */
-      width: 90vw;                
-      max-width: 1366px;          
+      /* Keep your same aspect ratio for phone mockup: 1366 ÷ 1080 ≈ 1.2648 */
+      aspect-ratio: 1366 / 1080;  
+      width: 90vw;
+      max-width: 1366px;
 
       background: url("images/phone.png") center/contain no-repeat;
       border: 2px solid #444;
@@ -81,7 +87,7 @@
       margin-bottom: 2px;
     }
 
-    /* INPUT + SEND BUTTON OVER KEYBOARD AT 80% */
+    /* INPUT + SEND BUTTON AT ~65% */
     .input-over-keyboard {
       position: absolute;
       top: 65%;
@@ -118,6 +124,22 @@
     .input-over-keyboard button:hover {
       background: #ccc;
     }
+
+    /*
+      MEDIA QUERIES for small screens
+      e.g., if screen < 480px wide,
+      let the phone fill nearly 100% width & remove border if needed
+    */
+    @media (max-width: 480px) {
+      .wrapper {
+        width: 95vw;
+        max-width:  none; /* so it doesn't stop at 1366px on small devices */
+        border: none;     /* optional if you want to remove border on small screens */
+      }
+      .outer {
+        padding: 4px; /* reduce outer padding on very small screens */
+      }
+    }
   </style>
 </head>
 <body>
@@ -130,7 +152,7 @@
         <div class="messages" id="messages"></div>
       </div>
       
-      <!-- Semi-transparent input at 80% position + SEND button -->
+      <!-- Semi-transparent input w/ SEND button -->
       <div class="input-over-keyboard">
         <input type="text" id="userInput" placeholder="Type message...">
         <button id="sendBtn">Send</button>
@@ -144,27 +166,24 @@
       "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
       "BONOBO, THEE MIKE B, you—sounds like a plan!",
       "I only know about LOW-RES[HI-DEF] at HVW8.",
-    "RSVP or regret it—your choice.",
+      "RSVP or regret it—your choice.",
       "HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9."
     ];
 
     const userInputField = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
 
-    // 1) Enter Key Listener (multiple fallback checks)
+    // 1) Enter Key Listener
     userInputField.addEventListener('keydown', function(e) {
-      // e.key should be 'Enter' in modern browsers
-      // e.keyCode === 13 for older browsers
-      // e.which === 13 for old IE
       if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
         handleSend();
       }
     });
 
-    // 2) Send Button Listener
+    // 2) Send Button
     sendBtn.addEventListener('click', handleSend);
 
-    // Core function to send user message + get bot reply
+    // Send user message + bot reply
     function handleSend() {
       const userMessage = userInputField.value.trim();
       if (userMessage !== '') {
@@ -174,7 +193,7 @@
       }
     }
 
-    // Add a message to .messages
+    // Add message to .messages
     function addMessage(sender, text) {
       const messagesEl = document.getElementById('messages');
       const msgDiv = document.createElement('div');
@@ -184,7 +203,7 @@
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    // Bot replies
+    // Bot reply
     function botReply(userInput) {
       const input = userInput.toLowerCase();
       let reply;
@@ -201,7 +220,7 @@
       addMessage('SmarterChild', reply);
     }
 
-    // Initial greeting
+    // Greeting on load
     window.addEventListener('load', () => {
       addMessage('SmarterChild', "Hey! I'm SmarterGLEN. Ask me about LOW-RES[HI-DEF]!");
     });
