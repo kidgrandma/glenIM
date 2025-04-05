@@ -5,17 +5,21 @@
   <title>GLENJAMN INSTANT MESSENGER</title>
   <link rel="icon" type="image/x-icon" href="images/glenfavico.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+   <style>
     /* RESET */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
 
     /* PAGE BACKGROUND */
     body {
       background: url("images/glenbackground.png") center/cover no-repeat;
-      overflow-x: hidden; /* In case of small screens */
+      overflow-x: hidden;
     }
 
-    /* Overlay for rotate prompt */
+    /* Rotation overlay (unchanged) */
     .rotate-overlay {
       display: none;
       position: fixed;
@@ -27,20 +31,19 @@
       align-items: center;
       text-align: center;
       padding: 2rem;
-      z-index: 9999; /* On top of everything */
+      z-index: 9999;
     }
     .rotate-overlay p {
       font-size: 1.2rem;
       line-height: 1.5;
     }
-
     @media screen and (max-width: 600px) and (orientation: portrait) {
       .rotate-overlay {
         display: flex;
       }
     }
 
-    /* CENTER THE PHONE */
+    /* Outer container for phone */
     .outer {
       display: flex;
       justify-content: center;
@@ -49,46 +52,44 @@
       padding: 1rem;
     }
 
-    /* PHONE WRAPPER WITH ASPECT RATIO (From your code) */
+    /* The phone wrapper, with a phone background image */
     .wrapper {
       position: relative;
-      aspect-ratio: 1366 / 1080;
+      aspect-ratio: 1366 / 1080;  /* your ratio */
       width: 90vw;
       max-width: 1366px;
       background: url("images/phone.png") center/contain no-repeat;
-      border: 0px solid #444;
     }
-.login-overlay {
-  position: fixed;
-  top: 0; 
-  left: 0;
-  width: 100vw; 
-  height: 100vh;
-  background: rgba(0,0,0,0.7);
-  display: flex;           /* center it */
-  justify-content: center; 
-  align-items: center; 
-  z-index: 9999;
-}
 
-.login-dialog {
-  background: #333;
-  padding: 2rem;
-  border-radius: 8px;
-  color: #fff;
-  text-align: center;
-  width: 300px;
-  max-width: 90vw;
-}
-
-   .login-dialog input {
+    /* LOGIN OVERLAY */
+    .login-overlay {
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 100vw; 
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center; 
+      align-items: center; 
+      z-index: 9999;
+    }
+    .login-dialog {
+      background: #333;
+      padding: 2rem;
+      border-radius: 8px;
+      color: #fff;
+      text-align: center;
+      width: 300px;
+      max-width: 90vw;
+    }
+    .login-dialog input {
       width: 80%;
       margin: 0.5rem 0;
       padding: 0.5rem;
       border-radius: 4px;
       border: none;
     }
-
     .login-dialog button {
       background: #00ffcc;
       border: none;
@@ -111,7 +112,7 @@
       margin-top: 1rem;
     }
     .theme-option {
-      width: 70px;
+      width: 80px;
       height: 40px;
       border: 2px solid #fff;
       border-radius: 4px;
@@ -124,21 +125,20 @@
     .theme-option:hover {
       border-color: #ff0;
     }
-    /* highlight selected box */
     .theme-option.selected {
       border-color: #00ffcc !important;
     }
 
-    /* Four style previews: A, B, C, D */
-    .themeA { 
+    /* Actual inline style for the sample text to show each font */
+    .themeA {
       background: #000; 
       color: #ff69b4; 
-      font-family: "Trebuchet MS", sans-serif;
+      font-family: "Trebuchet MS", sans-serif; 
     }
     .themeB {
       background: #fff;
       color: #000;
-      font-family: sans-serif;
+      font-family: sans-serif; /* default */
     }
     .themeC {
       background: #001f3f; /* navy */
@@ -151,7 +151,7 @@
       font-family: "Verdana", sans-serif;
     }
 
-    /* ... your chat layout below ... */
+    /* The chat container that changes color / font only */
     .screen-container {
       position: absolute;
       top: 20.74%;
@@ -167,6 +167,7 @@
       flex-direction: column;
       overflow: hidden;
     }
+
     .aim-header {
       background: #0055FF;
       color: #fff;
@@ -176,6 +177,7 @@
       padding: 4px;
       flex-shrink: 0;
     }
+
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -183,10 +185,17 @@
       font-size: 13px;
       padding: 6px;
     }
-    .message { margin-bottom: 8px; line-height: 1.3; }
-    .sender { font-weight: bold; display: block; margin-bottom: 2px; }
+    .message { 
+      margin-bottom: 8px; 
+      line-height: 1.3; 
+    }
+    .sender {
+      font-weight: bold; 
+      display: block; 
+      margin-bottom: 2px; 
+    }
 
-    /* INPUT + SEND BUTTON */
+    /* The input area below the phone screen */
     .input-over-keyboard {
       position: absolute;
       top: 63%;
@@ -206,7 +215,6 @@
       padding: 6px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      box-sizing: border-box;
       background: #fff;
     }
     .input-over-keyboard button {
@@ -217,21 +225,25 @@
       background: #ddd;
       cursor: pointer;
     }
-    .input-over-keyboard button:hover { background: #ccc; }
+    .input-over-keyboard button:hover {
+      background: #ccc;
+    }
   </style>
 </head>
 <body>
-  <!-- The rotate overlay shown if under 600px AND portrait -->
+  <!-- The rotate overlay -->
   <div class="rotate-overlay">
     <p>ROTATE UR PHONE 2 TALK 2 SMARTERGLEN<br><br>
     Or open this page on a wider screen.</p>
   </div>
- <div class="login-overlay" id="loginOverlay">
+
+  <!-- LOGIN OVERLAY: username + theme pick -->
+  <div class="login-overlay" id="loginOverlay">
     <div class="login-dialog">
       <h2>Sign Into GlenIM</h2>
       <label for="usernameInput">Username:</label><br>
       <input type="text" id="usernameInput" placeholder="Enter your name">
-      
+
       <p>Pick a Theme:</p>
       <div class="theme-choices">
         <div class="theme-option themeA" data-theme="A">TEXT</div>
@@ -243,75 +255,84 @@
       <button id="signInBtn">Sign In</button>
     </div>
   </div>
+
   <div class="outer">
     <div class="wrapper">
-      <!-- Chat messages -->
-      <div class="screen-container">
+      <div class="screen-container" id="chatContainer">
         <div class="aim-header">SmarterGlen</div>
         <div class="messages" id="messages"></div>
       </div>
-      <!-- Input + Send -->
+      <!-- input area below the screen container -->
       <div class="input-over-keyboard">
         <input type="text" id="userInput" placeholder="Type message...">
         <button id="sendBtn">Send</button>
       </div>
     </div>
   </div>
+
+  <!-- AUDIO FILES -->
   <audio id="sndIncoming" src="glenim.mp3" preload="auto"></audio>
-<audio id="sndOutgoing" src="glenim3.mp3" preload="auto"></audio>
+  <audio id="sndOutgoing" src="glenim3.mp3" preload="auto"></audio>
+
   <script>
+    let currentUser = \"Anonymous\";
+    let selectedTheme = \"\";
 
-    // Global variable to store the user’s chosen username
-let currentUser = "Anonymous";
-let selectedTheme = "";
-// Once the DOM loads
-window.addEventListener('load', () => {
-  const loginOverlay = document.getElementById('loginOverlay');
-  const signInBtn = document.getElementById('signInBtn');
-  const usernameInput = document.getElementById('usernameInput');
+    /* On load, set up sign-in logic + theme selection */
+    window.addEventListener('load', () => {
+      const loginOverlay = document.getElementById('loginOverlay');
+      const signInBtn = document.getElementById('signInBtn');
+      const usernameInput = document.getElementById('usernameInput');
 
-  const sndIncoming = document.getElementById('sndIncoming');
-  const sndOutgoing = document.getElementById('sndOutgoing');
-const themeBoxes = document.querySelectorAll('.theme-option');
+      const sndIncoming = document.getElementById('sndIncoming');
+      const sndOutgoing = document.getElementById('sndOutgoing');
+
+      // THEME BOXES
+      const themeBoxes = document.querySelectorAll('.theme-option');
       themeBoxes.forEach(box => {
         box.addEventListener('click', () => {
-          // unselect other boxes
+          // Deselect others
           themeBoxes.forEach(b => b.classList.remove('selected'));
-          // mark this box as selected
+          // Mark this one selected
           box.classList.add('selected');
-          // store which theme it corresponds to
           selectedTheme = box.getAttribute('data-theme');
         });
       });
-  signInBtn.addEventListener('click', () => {
-    // 1) Grab typed username
-    const typedName = usernameInput.value.trim();
-    if (typedName !== "") {
-      currentUser = typedName;
-    }
 
-    // 2) Attempt audio play/pause to unlock
-    sndIncoming.play().then(() => {
-      sndIncoming.pause();
-      sndIncoming.currentTime = 0;
-    }).catch(err => console.log('incoming audio blocked:', err));
+      signInBtn.addEventListener('click', () => {
+        // 1) username
+        const typedName = usernameInput.value.trim();
+        if (typedName !== \"\") {
+          currentUser = typedName;
+        }
 
-    sndOutgoing.play().then(() => {
-      sndOutgoing.pause();
-      sndOutgoing.currentTime = 0;
-    }).catch(err => console.log('outgoing audio blocked:', err));
+        // 2) audio unlock
+        sndIncoming.play().then(() => {
+          sndIncoming.pause();
+          sndIncoming.currentTime = 0;
+        }).catch(err => console.log('incoming audio blocked:', err));
+
+        sndOutgoing.play().then(() => {
+          sndOutgoing.pause();
+          sndOutgoing.currentTime = 0;
+        }).catch(err => console.log('outgoing audio blocked:', err));
+
+        // 3) apply theme to chat container
         applyTheme(selectedTheme);
-    // 3) Hide the login overlay
-    loginOverlay.style.display = 'none';
 
-    // Optionally greet them
-    addMessage('SmarterChild', `Welcome, ${currentUser}! Ask me about LOW-RES[HI-DEF]!`);
-  });
-});
-     function applyTheme(theme) {
+        // 4) hide overlay
+        loginOverlay.style.display = 'none';
+
+        // greet user
+        addMessage('SmarterChild', `Welcome, ${currentUser}! Ask me about LOW-RES[HI-DEF]!`);
+      });
+    });
+
+    /* APPLY THEME => only changes #chatContainer */
+    function applyTheme(theme) {
       const chatBox = document.getElementById('chatContainer');
       switch(theme) {
-        case 'A': // hot pink on black (Trebuchet)
+        case 'A': // Hot pink on black, Trebuchet MS
           chatBox.style.background = '#000';
           chatBox.style.color = '#ff69b4';
           chatBox.style.fontFamily = 'Trebuchet MS, sans-serif';
@@ -321,29 +342,31 @@ const themeBoxes = document.querySelectorAll('.theme-option');
           chatBox.style.color = '#000';
           chatBox.style.fontFamily = 'sans-serif';
           break;
-        case 'C': // White text, navy background (Arial)
+        case 'C': // White text, navy background, Arial
           chatBox.style.background = '#001f3f';
           chatBox.style.color = '#fff';
           chatBox.style.fontFamily = 'Arial, sans-serif';
           break;
-        case 'D': // Neon green + black (Verdana)
+        case 'D': // Neon green + black, Verdana
           chatBox.style.background = '#000';
           chatBox.style.color = '#39ff14';
           chatBox.style.fontFamily = 'Verdana, sans-serif';
           break;
-        default: 
-          // default 
+        default:
+          // if none selected or user didn't pick
           chatBox.style.background = '#fff';
           chatBox.style.color = '#000';
           chatBox.style.fontFamily = 'sans-serif';
       }
     }
+
+    /* SIMPLE CHAT LOGIC */
     const responses = [
-      "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
-      "BONOBO, THEE MIKE B, you—sounds like a plan!",
-      "I only know about LOW-RES[HI-DEF] at HVW8.",
-      "RSVP or regret it—your choice.",
-      "HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9."
+      \"Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!\",
+      \"BONOBO, THEE MIKE B, you—sounds like a plan!\",
+      \"I only know about LOW-RES[HI-DEF] at HVW8.\",
+      \"RSVP or regret it—your choice.\",
+      \"HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9.\"
     ];
 
     const userInputField = document.getElementById('userInput');
@@ -361,7 +384,7 @@ const themeBoxes = document.querySelectorAll('.theme-option');
       if (userMessage !== '') {
         addMessage('You', userMessage);
 
-        // play outgoing
+        // outgoing beep
         document.getElementById('sndOutgoing').play();
 
         userInputField.value = '';
@@ -378,21 +401,23 @@ const themeBoxes = document.querySelectorAll('.theme-option');
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    // *** FIXED BOT REPLY ***
     function botReply(userInput) {
       const input = userInput.toLowerCase();
       let reply;
 
       if (/where|when|location|time/.test(input)) {
-        reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
+        reply = \"LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.\";
       } else if (/who|perform|music|dj|artist/.test(input)) {
-        reply = "BONOBO & THEE MIKE B plus more—party time!";
+        reply = \"BONOBO & THEE MIKE B plus more—party time!\";
       } else if (/rsvp|ticket|sign up|list/.test(input)) {
-        reply = "Email rsvp@hvw8.com to secure your spot.";
+        reply = \"Email rsvp@hvw8.com to secure your spot.\";
       } else {
         reply = responses[Math.floor(Math.random() * responses.length)];
       }
+
       addMessage('SmarterChild', reply);
+
+      // incoming beep
       document.getElementById('sndIncoming').play();
     }
   </script>
