@@ -86,25 +86,23 @@
       margin-bottom: 2px;
     }
 
-    /* 6) Input over the keyboard, semi-transparent */
-    .input-over-keyboard {
+  .input-over-keyboard {
       position: absolute;
-      /*
-        You can adjust these values so the text box sits exactly over the keyboard area.
-        The phone ratio is ~1366x1080, so experiment in DevTools
-      */
-      top: 80%;      /* roughly halfway down device or more if you want lower */
-      left: 22%;     /* horizontally aligned with the screen container, or tweak */
-      width: 29%;    /* same width as .screen-container for symmetrical look */
+      top: 65%;
+      left: 22%;
+      width: 29%;
       background: rgba(255,255,255,0.5);
       border: 1px solid #aaa;
       border-radius: 4px;
       padding: 4px;
       box-shadow: 0 0 5px rgba(0,0,0,0.3);
+
+      display: flex;     /* to align input + button horizontally */
+      gap: 4px;
     }
 
     .input-over-keyboard input {
-      width: 100%;
+      flex: 1;           /* input expands to fill remaining space */
       font-size: 13px;
       padding: 6px;
       border: 1px solid #ccc;
@@ -112,21 +110,34 @@
       box-sizing: border-box;
       background: #fff;
     }
+
+    .input-over-keyboard button {
+      padding: 6px 12px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #ddd;
+      cursor: pointer;
+    }
+    .input-over-keyboard button:hover {
+      background: #ccc;
+    }
   </style>
 </head>
 <body>
   <div class="outer">
-    
     <div class="wrapper">
       
-      <!-- Chat messages (no input here) -->
+      <!-- Chat messages -->
       <div class="screen-container">
         <div class="aim-header">SmarterChild</div>
         <div class="messages" id="messages"></div>
       </div>
       
+      <!-- Semi-transparent input at 80% position + SEND button -->
       <div class="input-over-keyboard">
-        <input type="text" id="userInput" placeholder="Type message, press Enter...">
+        <input type="text" id="userInput" placeholder="Type message...">
+        <button id="sendBtn">Send</button>
       </div>
     </div>
   </div>
@@ -142,20 +153,32 @@
     ];
 
     const userInputField = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
 
-    // Use 'keypress' + keyCode 13 for better Safari support
-    userInputField.addEventListener('keypress', function(e) {
-      if (e.keyCode === 13) {
-        const userMessage = e.target.value.trim();
-        if (userMessage !== '') {
-          addMessage('You', userMessage);
-          e.target.value = '';
-          // Provide slight delay for realism
-          setTimeout(() => botReply(userMessage), 600);
-        }
+    // 1) Enter Key Listener (multiple fallback checks)
+    userInputField.addEventListener('keydown', function(e) {
+      // e.key should be 'Enter' in modern browsers
+      // e.keyCode === 13 for older browsers
+      // e.which === 13 for old IE
+      if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
+        handleSend();
       }
     });
 
+    // 2) Send Button Listener
+    sendBtn.addEventListener('click', handleSend);
+
+    // Core function to send user message + get bot reply
+    function handleSend() {
+      const userMessage = userInputField.value.trim();
+      if (userMessage !== '') {
+        addMessage('You', userMessage);
+        userInputField.value = '';
+        setTimeout(() => botReply(userMessage), 600);
+      }
+    }
+
+    // Add a message to .messages
     function addMessage(sender, text) {
       const messagesEl = document.getElementById('messages');
       const msgDiv = document.createElement('div');
@@ -165,6 +188,7 @@
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
+    // Bot replies
     function botReply(userInput) {
       const input = userInput.toLowerCase();
       let reply;
@@ -181,9 +205,9 @@
       addMessage('SmarterChild', reply);
     }
 
-    // Initial greeting on page load
+    // Initial greeting
     window.addEventListener('load', () => {
-      addMessage('SmarterChild', \"Hey! I'm SmarterGLEN. Ask me about LOW-RES[HI-DEF]!\");
+      addMessage('SmarterChild', \"Hey! I'm SmarterChild. Ask me about LOW-RES[HI-DEF]!\");
     });
   </script>
 </body>
