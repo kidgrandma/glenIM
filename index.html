@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>GLENJAMN INSTANT MESSENGER</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <style>
+<style>
+  /* Reset & Base Styles */
   * {
     margin: 0;
     padding: 0;
@@ -13,33 +14,34 @@
 
   body {
     background: url("images/glenbackground.png") center/cover no-repeat;
-    padding: 20px; /* Add padding to prevent edge crowding */
+    min-height: 100vh;
   }
 
-  /* Center the phone wrapper */
+  /* Centering Container */
   .outer {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
   }
 
-  /* Phone wrapper (scaled down) */
+  /* Phone Wrapper - Responsive Scaling */
   .wrapper {
     position: relative;
-    width: 100%; /* Full width on small screens */
-    max-width: 300px; /* Shrink for mobile */
-    aspect-ratio: 1366 / 1080; /* Maintain original aspect ratio */
+    width: 90vw;              /* Fluid width */
+    max-width: 500px;         /* Max size for desktop */
+    aspect-ratio: 1366 / 1080; /* Original aspect ratio */
     background: url("images/phone.png") center/contain no-repeat;
   }
 
-  /* Chat screen (adjusted positioning) */
+  /* Chat Screen - Responsive Positioning */
   .screen-container {
     position: absolute;
-    top: 18%; /* Lower on small screens */
-    left: 20%;
-    width: 60%; /* Wider to utilize space */
-    height: 30%; /* Taller for more messages */
+    top: 20%;
+    left: 22%;
+    width: 56%;               /* Slightly wider for better readability */
+    height: 25%;
     background: #fff;
     border-radius: 8px;
     overflow: hidden;
@@ -47,45 +49,57 @@
     flex-direction: column;
   }
 
-  /* Messages area */
+  /* Messages Area */
   .messages {
     flex: 1;
     overflow-y: auto;
     padding: 8px;
-    font-size: 14px; /* Slightly larger text */
+    font-size: 14px;
   }
 
-  /* Input area (mobile-optimized) */
+  /* Input Area - Responsive Layout */
   .input-over-keyboard {
     position: absolute;
-    top: 60%; /* Lower to avoid keyboard */
-    left: 20%;
-    width: 60%;
+    top: 65%;
+    left: 22%;
+    width: 56%;
     padding: 8px;
-    background: rgba(255, 255, 255, 0.9); /* More opaque for readability */
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    gap: 8px;
   }
 
   .input-over-keyboard input {
-    width: 70%; /* Smaller input to fit button */
-    padding: 10px; /* Larger tap target */
-  }
-
-  .input-over-keyboard button {
-    width: 25%; /* Wider button */
+    flex: 1;
     padding: 10px;
   }
 
-  /* Mobile-specific tweaks */
+  .input-over-keyboard button {
+    padding: 10px 15px;
+  }
+
+  /* Mobile-Specific Adjustments (500px and below) */
   @media (max-width: 500px) {
     .wrapper {
-      max-width: 280px; /* Even smaller on tiny screens */
+      max-width: 300px;       /* Smaller phone frame */
     }
     .screen-container {
-      top: 15%;
-      height: 35%; /* More message space */
+      top: 18%;
+      left: 18%;
+      width: 64%;             /* More horizontal space */
+      height: 30%;            /* Taller chat area */
     }
     .input-over-keyboard {
-      top: 55%;
+      top: 60%;
+      left: 18%;
+      width: 64%;
+    }
+  }
+
+  /* Desktop-Specific Adjustments (1024px and above) */
+  @media (min-width: 1024px) {
+    .wrapper {
+      max-width: 600px;       /* Larger phone frame */
     }
   }
 </style>
