@@ -20,27 +20,29 @@
       display: none;
       position: fixed;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      width: 100vw; 
+      height: 100vh;
       background: rgba(0,0,0,0.8);
       color: #fff;
       justify-content: center;
       align-items: center;
       text-align: center;
       padding: 2rem;
-      z-index: 9999; /* On top of everything */
+      z-index: 9999; 
     }
     .rotate-overlay p {
       font-size: 1.2rem;
       line-height: 1.5;
     }
 
+    /* Show the rotation overlay if under 600px in portrait mode */
     @media screen and (max-width: 600px) and (orientation: portrait) {
       .rotate-overlay {
         display: flex;
       }
     }
 
-    /* CENTER THE PHONE */
+    /* The main container for your phone mockup */
     .outer {
       display: flex;
       justify-content: center;
@@ -49,56 +51,59 @@
       padding: 1rem;
     }
 
-    /* PHONE WRAPPER WITH ASPECT RATIO (From your code) */
     .wrapper {
       position: relative;
       aspect-ratio: 1366 / 1080;
       width: 90vw;
       max-width: 1366px;
       background: url("images/phone.png") center/contain no-repeat;
-      border: 0px solid #444;
+      /* no border in your code, but you can re-add if you like */
     }
-.login-overlay {
-  position: fixed;
-  top: 0; 
-  left: 0;
-  width: 100vw; 
-  height: 100vh;
-  background: rgba(0,0,0,0.7);
-  display: flex;           /* center it */
-  justify-content: center; 
-  align-items: center; 
-  z-index: 9999;
-}
 
-.login-dialog {
-  background: #333;
-  padding: 2rem;
-  border-radius: 8px;
-  color: #fff;
-  text-align: center;
-  width: 300px;
-  max-width: 90vw;
-}
+    /* SIGN-IN OVERLAY (username + theme + audio unlock) */
+    .login-overlay {
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 100vw; 
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center; 
+      align-items: center; 
+      z-index: 9999;
+    }
 
-.login-dialog input {
-  width: 80%;
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-}
+    .login-dialog {
+      background: #333;
+      padding: 2rem;
+      border-radius: 8px;
+      color: #fff;
+      text-align: center;
+      width: 300px;
+      max-width: 90vw;
+    }
 
-.login-dialog button {
-  background: #00ffcc;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-weight: bold;
-}
+    .login-dialog input,
+    .login-dialog select {
+      width: 80%;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+    }
 
-.login-dialog button:hover {
-  background: #00e6b8;
-}
-    /* ... your chat layout below ... */
+    .login-dialog button {
+      background: #00ffcc;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+    .login-dialog button:hover {
+      background: #00e6b8;
+    }
+
+    /* THE CHAT SCREEN (Your existing .screen-container) */
     .screen-container {
       position: absolute;
       top: 20.74%;
@@ -128,10 +133,17 @@
       font-size: 13px;
       padding: 6px;
     }
-    .message { margin-bottom: 8px; line-height: 1.3; }
-    .sender { font-weight: bold; display: block; margin-bottom: 2px; }
+    .message { 
+      margin-bottom: 8px; 
+      line-height: 1.3; 
+    }
+    .sender { 
+      font-weight: bold; 
+      display: block; 
+      margin-bottom: 2px; 
+    }
 
-    /* INPUT + SEND BUTTON */
+    /* INPUT BOX (like your .input-over-keyboard) */
     .input-over-keyboard {
       position: absolute;
       top: 63%;
@@ -162,79 +174,164 @@
       background: #ddd;
       cursor: pointer;
     }
-    .input-over-keyboard button:hover { background: #ccc; }
+    .input-over-keyboard button:hover { 
+      background: #ccc; 
+    }
   </style>
 </head>
 <body>
+
   <!-- The rotate overlay shown if under 600px AND portrait -->
   <div class="rotate-overlay">
     <p>ROTATE UR PHONE 2 TALK 2 SMARTERGLEN<br><br>
     Or open this page on a wider screen.</p>
   </div>
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-dialog">
-    <h2>Sign Into GlenIM</h2>
-    <label for="usernameInput">Username:</label>
-    <input type="text" id="usernameInput" placeholder="Enter your name">
-    <button id="signInBtn">Sign In</button>
+
+  <!-- SIGN-IN OVERLAY with username + theme selection -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-dialog">
+      <h2>Sign Into GlenIM</h2>
+      
+      <label for="usernameInput">Username:</label><br>
+      <input type="text" id="usernameInput" placeholder="Enter your name">
+
+      <br><br>
+      <label for="themeSelect">Choose a Theme:</label><br>
+      <select id="themeSelect">
+        <option value="default">Default (White BG, Blue Header)</option>
+        <option value="A">Hot Pink on Black (Trebuchet)</option>
+        <option value="B">White BG, Black Text (Times)</option>
+        <option value="C">Black BG, Neon Green (Verdana)</option>
+        <option value="D">Navy BG, White (Arial)</option>
+      </select>
+
+      <br><br>
+      <button id="signInBtn">Sign In</button>
+    </div>
   </div>
-</div>
+
   <div class="outer">
     <div class="wrapper">
-      <!-- Chat messages -->
+      <!-- Chat messages container -->
       <div class="screen-container">
         <div class="aim-header">SmarterGlen</div>
         <div class="messages" id="messages"></div>
       </div>
-      <!-- Input + Send -->
+
+      <!-- Input area -->
       <div class="input-over-keyboard">
         <input type="text" id="userInput" placeholder="Type message...">
         <button id="sendBtn">Send</button>
       </div>
     </div>
   </div>
+
+  <!-- Audio elements -->
   <audio id="sndIncoming" src="glenim.mp3" preload="auto"></audio>
-<audio id="sndOutgoing" src="glenim3.mp3" preload="auto"></audio>
+  <audio id="sndOutgoing" src="glenim3.mp3" preload="auto"></audio>
+
   <script>
+    /* **************************************
+       GLOBALS & SIGN-IN LOGIC
+    ************************************** */
+    let currentUser = "Anonymous";
 
-    // Global variable to store the user’s chosen username
-let currentUser = "Anonymous";
+    window.addEventListener('load', () => {
+      const loginOverlay = document.getElementById('loginOverlay');
+      const signInBtn = document.getElementById('signInBtn');
+      const usernameInput = document.getElementById('usernameInput');
+      const themeSelect = document.getElementById('themeSelect');
 
-// Once the DOM loads
-window.addEventListener('load', () => {
-  const loginOverlay = document.getElementById('loginOverlay');
-  const signInBtn = document.getElementById('signInBtn');
-  const usernameInput = document.getElementById('usernameInput');
+      const sndIncoming = document.getElementById('sndIncoming');
+      const sndOutgoing = document.getElementById('sndOutgoing');
 
-  const sndIncoming = document.getElementById('sndIncoming');
-  const sndOutgoing = document.getElementById('sndOutgoing');
+      signInBtn.addEventListener('click', () => {
+        // 1) Grab typed username
+        const typedName = usernameInput.value.trim();
+        if (typedName !== "") {
+          currentUser = typedName;
+        }
 
-  signInBtn.addEventListener('click', () => {
-    // 1) Grab typed username
-    const typedName = usernameInput.value.trim();
-    if (typedName !== "") {
-      currentUser = typedName;
+        // 2) Attempt audio play/pause to unlock
+        sndIncoming.play().then(() => {
+          sndIncoming.pause();
+          sndIncoming.currentTime = 0;
+        }).catch(err => console.log('incoming audio blocked:', err));
+
+        sndOutgoing.play().then(() => {
+          sndOutgoing.pause();
+          sndOutgoing.currentTime = 0;
+        }).catch(err => console.log('outgoing audio blocked:', err));
+
+        // 3) Apply chosen theme
+        applyTheme(themeSelect.value);
+
+        // 4) Hide the login overlay
+        loginOverlay.style.display = 'none';
+
+        // 5) Optional greeting
+        addMessage('SmarterChild', `Welcome, ${currentUser}! Ask me about LOW-RES[HI-DEF]!`);
+      });
+    });
+
+    /* **************************************
+       THEME SWITCHING
+    ************************************** */
+    function applyTheme(themeKey) {
+      const wrapperEl = document.querySelector('.wrapper'); 
+      // We can style .wrapper or specifically .screen-container & .input-over-keyboard
+      // For simplicity, let's style .wrapper's background & color
+      // and possibly override .screen-container's background if we want.
+
+      switch(themeKey) {
+        case 'A': // Hot pink on black, Trebuchet
+          wrapperEl.style.background = '#000'; 
+          wrapperEl.style.color = '#ff69b4'; 
+          wrapperEl.style.fontFamily = "Trebuchet MS, sans-serif";
+          // If you want the .screen-container also black, do:
+          document.querySelector('.screen-container').style.background = '#000';
+          document.querySelector('.screen-container').style.color = '#ff69b4';
+          break;
+
+        case 'B': // White BG, black text, Times
+          wrapperEl.style.background = '#fff';
+          wrapperEl.style.color = '#000';
+          wrapperEl.style.fontFamily = "Times New Roman, serif";
+          document.querySelector('.screen-container').style.background = '#fff';
+          document.querySelector('.screen-container').style.color = '#000';
+          break;
+
+        case 'C': // Black BG, neon green, Verdana
+          wrapperEl.style.background = '#000'; 
+          wrapperEl.style.color = '#39ff14';
+          wrapperEl.style.fontFamily = "Verdana, sans-serif";
+          document.querySelector('.screen-container').style.background = '#000';
+          document.querySelector('.screen-container').style.color = '#39ff14';
+          break;
+
+        case 'D': // Navy BG, white text, Arial
+          wrapperEl.style.background = '#001f3f';
+          wrapperEl.style.color = '#fff';
+          wrapperEl.style.fontFamily = "Arial, sans-serif";
+          document.querySelector('.screen-container').style.background = '#001f3f';
+          document.querySelector('.screen-container').style.color = '#fff';
+          break;
+
+        default: // 'default'
+          // Return to your original phone background in .wrapper
+          // You might want to reapply background phone.png or reset color
+          wrapperEl.style.background = 'url("images/phone.png") center/contain no-repeat';
+          wrapperEl.style.color = '#000';
+          wrapperEl.style.fontFamily = "sans-serif";
+          // Also revert .screen-container to white
+          document.querySelector('.screen-container').style.background = '#fff';
+          document.querySelector('.screen-container').style.color = '#000';
+      }
     }
 
-    // 2) Attempt audio play/pause to unlock
-    sndIncoming.play().then(() => {
-      sndIncoming.pause();
-      sndIncoming.currentTime = 0;
-    }).catch(err => console.log('incoming audio blocked:', err));
-
-    sndOutgoing.play().then(() => {
-      sndOutgoing.pause();
-      sndOutgoing.currentTime = 0;
-    }).catch(err => console.log('outgoing audio blocked:', err));
-
-    // 3) Hide the login overlay
-    loginOverlay.style.display = 'none';
-
-    // Optionally greet them
-    addMessage('SmarterChild', `Welcome, ${currentUser}! Ask me about LOW-RES[HI-DEF]!`);
-  });
-});
- 
+    /* **************************************
+       CHAT LOGIC
+    ************************************** */
     const responses = [
       "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
       "BONOBO, THEE MIKE B, you—sounds like a plan!",
@@ -256,12 +353,10 @@ window.addEventListener('load', () => {
     function handleSend() {
       const userMessage = userInputField.value.trim();
       if (userMessage !== '') {
-        addMessage('You', userMessage);
-
-        // play outgoing
-        document.getElementById('sndOutgoing').play();
-
+        addMessage(currentUser, userMessage); // Use currentUser from sign-in
+        document.getElementById('sndOutgoing').play(); // outgoing sound
         userInputField.value = '';
+
         setTimeout(() => botReply(userMessage), 600);
       }
     }
@@ -275,7 +370,6 @@ window.addEventListener('load', () => {
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    // *** FIXED BOT REPLY ***
     function botReply(userInput) {
       const input = userInput.toLowerCase();
       let reply;
@@ -290,11 +384,8 @@ window.addEventListener('load', () => {
         reply = responses[Math.floor(Math.random() * responses.length)];
       }
 
-      // 1) Actually display the bot message
       addMessage('SmarterChild', reply);
-
-      // 2) Now play the 'incoming' sound
-      document.getElementById('sndIncoming').play();
+      document.getElementById('sndIncoming').play(); // incoming beep
     }
   </script>
 </body>
