@@ -279,15 +279,19 @@ function handleSend() {
 function botReply(userInput) {
   const input = userInput.toLowerCase();
   let reply;
-      if (/where|when|location|time/.test(input)) {
-        reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
-      } else if (/who|perform|music|dj|artist/.test(input)) {
-        reply = "BONOBO & THEE MIKE B plus more—party time!";
-      } else if (/rsvp|ticket|sign up|list/.test(input)) {
-        reply = "Email rsvp@hvw8.com to secure your spot.";
-      } else {
-        reply = responses[Math.floor(Math.random() * responses.length)];
-      };
+
+  if (/where|when|location|time/.test(input)) {
+    reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
+  } else if (/who|perform|music|dj|artist/.test(input)) {
+    reply = "BONOBO & THEE MIKE B plus more—party time!";
+  } else if (/rsvp|ticket|sign up|list/.test(input)) {
+    reply = "Email rsvp@hvw8.com to secure your spot.";
+  } else {
+    reply = responses[Math.floor(Math.random() * responses.length)];
+  }
+
+  addMessage('SmarterChild', reply); 
+} 
   </script>
 </body>
 </html>
