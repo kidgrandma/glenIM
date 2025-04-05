@@ -408,11 +408,12 @@ function botReply(userInput) {
   const lower = userInput.toLowerCase();
 
   if (/where|when|location|time/.test(lower)) {
-    reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
+    reply = "It's on the fucking flyer bro. OPEN YOUR EYES. HVW8 Gallery, 6–10PM on April 9.";
   } else if (/who|perform|music|dj|artist/.test(lower)) {
-    reply = "BONOBO & THEE MIKE B plus more—party time!";
+    reply = "Listen bro.. either you come to my art show or I'll just never take ur photo ever again. It's not that complicated. Honestly, I don't even need you to come it's just one of those things where I figured maybe you wanted to actually meet some cool people. It's fine though. Have fun with whatever youre doing.",
+      "HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9. It's on the fucking flyer bro. OPEN YOUR EYES.";
   } else if (/rsvp|ticket|sign up|list/.test(lower)) {
-    reply = "Email rsvp@hvw8.com to secure your spot.";
+    reply = "Email rsvp@hvw8.com or like dude just leave me alone. Also, can you see if ur homie who owns that store with all the fucking like diamonds and shit might wanna sponsor this because honestly, there's a lot of homies in town rn that might wanna get something made jus sayin.";
   } else {
     reply = responses[Math.floor(Math.random() * responses.length)];
   }
