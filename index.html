@@ -353,7 +353,7 @@
         loginOverlay.style.display = 'none';
 
         // greet user
-        addMessage('SmarterChild', `Welcome, ${currentUser}! Ask me about LOW-RES[HI-DEF]!`);
+        addMessage('SmarterGLEN', `Welcome, ${currentUser}! I'm really fucking busy planning my art show so what do u wanna talk about?`);
       });
     });
 
@@ -366,11 +366,12 @@
 
     /* SIMPLE CHAT LOGIC */
     const responses = [
-      "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
+      "Just come over and pick me up and take me to my art show like damn it doesnt have to be so complicated.",
       "BONOBO, THEE MIKE B, you—sounds like a plan!",
       "I only know about LOW-RES[HI-DEF] at HVW8.",
-      "RSVP or regret it—your choice.",
-      "HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9."
+      "RSVP or never ask me for any favors ever again.",
+      "Listen bro.. either you come to my art show or I'll just never take ur photo ever again. It's not that complicated. Honestly, I don't even need you to come it's just one of those things where I figured maybe you wanted to actually meet some cool people. It's fine though. Have fun with whatever youre doing.",
+      "HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9. It's on the fucking flyer bro. OPEN YOUR EYES."
     ];
 
     const userInputField = document.getElementById('userInput');
@@ -416,7 +417,7 @@ function botReply(userInput) {
     reply = responses[Math.floor(Math.random() * responses.length)];
   }
 
-  addMessage('SmarterChild', reply);
+  addMessage('SmarterGlen', reply);
   document.getElementById('sndIncoming').play();
 }
   </script>
