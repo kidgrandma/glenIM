@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sidekick Chatbot</title>
+  <meta charset="UTF-8">
+  <title>Responsive Sidekick Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* BASIC RESET */
+    /* Basic Reset */
     * {
-      margin: 0;
-      padding: 0;
+      margin: 0; 
+      padding: 0; 
       box-sizing: border-box;
     }
     body {
-      background-color: #ddd;
+      background: #ccc;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,31 +20,43 @@
       font-family: 'Verdana', sans-serif;
     }
 
-    /* MAIN SIDEKICK WRAPPER */
-    .sidekick-frame {
+    /* WRAPPER with aspect-ratio for the phone image */
+    .wrapper {
       position: relative;
-      width: 900px;     /* Approximated based on the image’s ratio */
-      height: 475px;    /* Approximated */
-      background: url('https://static-mpm-optimized.s3.eu-west-2.amazonaws.com/fc8a439c-d3bd-4c79-a372-9774810d62b7_large.png') 
-                  no-repeat center center;
-      background-size: contain; 
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      /* 1366x1080 => ~1.2648 ratio */
+      aspect-ratio: 1366 / 1080;
+      width: 90vw;           /* scale up to 90% of viewport width */
+      max-width: 1366px;     /* don’t exceed the actual phone width */
+      background: url('images/phone.png') center/contain no-repeat;
       border: 2px solid #444;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
 
-    /* SCREEN AREA ON THE DEVICE */
+    /* This is your chat screen overlay at the exact position you measured */
     .screen-container {
       position: absolute;
-      /* These four values must be fine-tuned to align with the device’s screen */
-      top: 120px;     /* Move down ~120px to start at the screen area */
-      left: 200px;    /* Move right ~200px to get inside the screen bezel */
-      width: 500px;   /* Screen width on the device */
-      height: 160px;  /* Screen height */
-      background-color: #ffffff;
-      border: 2px solid #333;
-      border-radius: 8px;
+      top: 7.74%;       /* ~ 83.7px / 1080 */
+      left: 25.07%;     /* ~ 342.6px / 1366 */
+      width: 32.25%;    /* ~ 440.5px / 1366 */
+      height: 26.93%;   /* ~ 290.8px / 1080 */
+      background: rgba(0, 255, 0, 0.2); /* debugging color; remove later */
+      border: 2px solid limegreen;      /* debugging border; remove later */
       overflow: hidden;
     }
+
+    /* OPTIONAL: You can put your AIM chat inside .screen-container, or
+       create separate elements for a chat window + input. 
+       This example is just the green square so you can confirm alignment. */
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="screen-container">
+      <!-- Insert your chat HTML here, e.g. your AIM window and input. -->
+    </div>
+  </div>
+</body>
+</html>
 
     .aim-header {
       background: #0055FF;
