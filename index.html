@@ -402,23 +402,23 @@ function addMessage(sender, text, isUser=false) {
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
+function botReply(userInput) {
+  let reply;
+  const lower = userInput.toLowerCase();
 
-    function botReply(userInput) {
-      let reply;
-      const lower = userInput.toLowerCase();
-      if (/where|when|location|time/.test(lower)) {
-        reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
-      } else if (/who|perform|music|dj|artist/.test(input)) {
-        reply = "BONOBO & THEE MIKE B plus more—party time!";
-      } else if (/rsvp|ticket|sign up|list/.test(input)) {
-        reply = "Email rsvp@hvw8.com to secure your spot.";
-      } else {
-        reply = responses[Math.floor(Math.random() * responses.length)];
-      }
+  if (/where|when|location|time/.test(lower)) {
+    reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
+  } else if (/who|perform|music|dj|artist/.test(lower)) {
+    reply = "BONOBO & THEE MIKE B plus more—party time!";
+  } else if (/rsvp|ticket|sign up|list/.test(lower)) {
+    reply = "Email rsvp@hvw8.com to secure your spot.";
+  } else {
+    reply = responses[Math.floor(Math.random() * responses.length)];
+  }
 
-addMessage('SmarterChild', reply); // no third arg => false
-      document.getElementById('sndIncoming').play();
-    }
+  addMessage('SmarterChild', reply);
+  document.getElementById('sndIncoming').play();
+}
   </script>
 </body>
 </html>
