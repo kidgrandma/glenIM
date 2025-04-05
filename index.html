@@ -4,21 +4,40 @@
   <meta charset="UTF-8">
   <title>GLENJAMN INSTANT MESSENGER</title>
   <link rel="icon" type="image/x-icon" href="images/glenfavico.ico">
-  <!-- Ensures mobile devices scale correctly -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* RESET */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     /* PAGE BACKGROUND */
     body {
       background: url("images/glenbackground.png") center/cover no-repeat;
-      /* Helps avoid scroll issues on iOS Safari */
-      overflow-x: hidden;
+      overflow-x: hidden; /* In case of small screens */
+    }
+
+    /* Overlay for rotate prompt */
+    .rotate-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      z-index: 9999; /* On top of everything */
+    }
+    .rotate-overlay p {
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    @media screen and (max-width: 600px) and (orientation: portrait) {
+      .rotate-overlay {
+        display: flex;
+      }
     }
 
     /* CENTER THE PHONE */
@@ -27,24 +46,21 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      /* small padding so phone isn't flush with edges on very small screens */
-      padding: 8px;
+      padding: 1rem;
     }
 
-    /* PHONE WRAPPER WITH ASPECT RATIO */
+    /* PHONE WRAPPER WITH ASPECT RATIO (From your code) */
     .wrapper {
       position: relative;
-      /* Keep your same aspect ratio for phone mockup: 1366 ÷ 1080 ≈ 1.2648 */
-      aspect-ratio: 1366 / 1080;  
+      aspect-ratio: 1366 / 1080;
       width: 90vw;
       max-width: 1366px;
-
       background: url("images/phone.png") center/contain no-repeat;
       border: 2px solid #444;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
 
-    /* CHAT SCREEN (MESSAGES ONLY) */
+    /* ... your chat layout below ... */
     .screen-container {
       position: absolute;
       top: 20.74%;
@@ -58,7 +74,6 @@
       flex-direction: column;
       overflow: hidden;
     }
-
     .aim-header {
       background: #0055FF;
       color: #fff;
@@ -68,7 +83,6 @@
       padding: 4px;
       flex-shrink: 0;
     }
-
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -76,18 +90,10 @@
       font-size: 13px;
       padding: 6px;
     }
+    .message { margin-bottom: 8px; line-height: 1.3; }
+    .sender { font-weight: bold; display: block; margin-bottom: 2px; }
 
-    .message {
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-    .sender {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    /* INPUT + SEND BUTTON AT ~65% */
+    /* INPUT + SEND BUTTON */
     .input-over-keyboard {
       position: absolute;
       top: 65%;
@@ -98,13 +104,11 @@
       border-radius: 4px;
       padding: 4px;
       box-shadow: 0 0 5px rgba(0,0,0,0.3);
-
-      display: flex;     /* to align input + button horizontally */
+      display: flex;
       gap: 4px;
     }
-
     .input-over-keyboard input {
-      flex: 1;           /* input expands to fill remaining space */
+      flex: 1;
       font-size: 13px;
       padding: 6px;
       border: 1px solid #ccc;
@@ -112,7 +116,6 @@
       box-sizing: border-box;
       background: #fff;
     }
-
     .input-over-keyboard button {
       padding: 6px 12px;
       font-size: 13px;
@@ -121,38 +124,24 @@
       background: #ddd;
       cursor: pointer;
     }
-    .input-over-keyboard button:hover {
-      background: #ccc;
-    }
-
-    /*
-      MEDIA QUERIES for small screens
-      e.g., if screen < 480px wide,
-      let the phone fill nearly 100% width & remove border if needed
-    */
-    @media (max-width: 480px) {
-      .wrapper {
-        width: 95vw;
-        max-width:  none; /* so it doesn't stop at 1366px on small devices */
-        border: none;     /* optional if you want to remove border on small screens */
-      }
-      .outer {
-        padding: 4px; /* reduce outer padding on very small screens */
-      }
-    }
+    .input-over-keyboard button:hover { background: #ccc; }
   </style>
 </head>
 <body>
+  <!-- The rotate overlay shown if under 600px AND portrait -->
+  <div class="rotate-overlay">
+    <p>Please rotate your phone to landscape for the best experience!<br><br>
+    Or open this page on a wider screen.</p>
+  </div>
+
   <div class="outer">
     <div class="wrapper">
-      
       <!-- Chat messages -->
       <div class="screen-container">
         <div class="aim-header">SmarterChild</div>
         <div class="messages" id="messages"></div>
       </div>
-      
-      <!-- Semi-transparent input w/ SEND button -->
+      <!-- Input + Send -->
       <div class="input-over-keyboard">
         <input type="text" id="userInput" placeholder="Type message...">
         <button id="sendBtn">Send</button>
@@ -161,7 +150,7 @@
   </div>
 
   <script>
-    // Basic fallback responses
+    /* Basic fallback responses */
     const responses = [
       "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
       "BONOBO, THEE MIKE B, you—sounds like a plan!",
@@ -173,17 +162,13 @@
     const userInputField = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
 
-    // 1) Enter Key Listener
     userInputField.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
         handleSend();
       }
     });
-
-    // 2) Send Button
     sendBtn.addEventListener('click', handleSend);
 
-    // Send user message + bot reply
     function handleSend() {
       const userMessage = userInputField.value.trim();
       if (userMessage !== '') {
@@ -193,7 +178,6 @@
       }
     }
 
-    // Add message to .messages
     function addMessage(sender, text) {
       const messagesEl = document.getElementById('messages');
       const msgDiv = document.createElement('div');
@@ -203,11 +187,9 @@
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    // Bot reply
     function botReply(userInput) {
       const input = userInput.toLowerCase();
       let reply;
-
       if (/where|when|location|time/.test(input)) {
         reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
       } else if (/who|perform|music|dj|artist/.test(input)) {
@@ -220,7 +202,6 @@
       addMessage('SmarterChild', reply);
     }
 
-    // Greeting on load
     window.addEventListener('load', () => {
       addMessage('SmarterChild', "Hey! I'm SmarterGLEN. Ask me about LOW-RES[HI-DEF]!");
     });
