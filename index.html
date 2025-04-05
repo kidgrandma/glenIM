@@ -194,11 +194,11 @@ const responses = [
       let reply;
 
       if (/where|when|location|time/.test(input)) {
-        reply = \"LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.\";
+        reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
       } else if (/who|perform|music|dj|artist/.test(input)) {
-        reply = \"BONOBO & THEE MIKE B plus more—party time!\";
+        reply = "BONOBO & THEE MIKE B plus more—party time!";
       } else if (/rsvp|ticket|sign up|list/.test(input)) {
-        reply = \"Email rsvp@hvw8.com to secure your spot.\";
+        reply = "Email rsvp@hvw8.com to secure your spot.";
       } else {
         reply = responses[Math.floor(Math.random() * responses.length)];
       }
@@ -207,7 +207,7 @@ const responses = [
 
     // Initial greeting
     window.addEventListener('load', () => {
-      addMessage('SmarterChild', \"Hey! I'm SmarterChild. Ask me about LOW-RES[HI-DEF]!\");
+      addMessage('SmarterChild', "Hey! I'm SmarterChild. Ask me about LOW-RES[HI-DEF]!");
     });
   </script>
 </body>
