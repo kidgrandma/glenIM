@@ -6,20 +6,15 @@
   <link rel="icon" type="image/x-icon" href="images/glenfavico.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <style>
-    /* RESET */
     * {
       margin: 0; 
       padding: 0; 
       box-sizing: border-box;
     }
-
-    /* PAGE BACKGROUND */
     body {
       background: url("images/glenbackground.png") center/cover no-repeat;
       overflow-x: hidden;
     }
-
-    /* Rotation overlay (unchanged) */
     .rotate-overlay {
       display: none;
       position: fixed;
@@ -42,8 +37,6 @@
         display: flex;
       }
     }
-
-    /* Outer container for phone */
     .outer {
       display: flex;
       justify-content: center;
@@ -51,17 +44,13 @@
       min-height: 100vh;
       padding: 1rem;
     }
-
-    /* The phone wrapper, with a phone background image */
     .wrapper {
       position: relative;
-      aspect-ratio: 1366 / 1080;  /* your ratio */
+      aspect-ratio: 1366 / 1080; 
       width: 90vw;
       max-width: 1366px;
       background: url("images/phone.png") center/contain no-repeat;
     }
-
-    /* LOGIN OVERLAY */
     .login-overlay {
       position: fixed;
       top: 0; 
@@ -102,8 +91,6 @@
     .login-dialog button:hover {
       background: #00e6b8;
     }
-
-    /* THEME PREVIEW BOXES */
     .theme-choices {
       display: flex;
       flex-wrap: wrap;
@@ -128,8 +115,6 @@
     .theme-option.selected {
       border-color: #00ffcc !important;
     }
-
-    /* Actual inline style for the sample text to show each font */
     .themeA {
       background: #000; 
       color: #ff69b4; 
@@ -151,7 +136,6 @@
       font-family: "Verdana", sans-serif;
     }
 
-    /* The chat container that changes color / font only */
 .screen-container {
       position: absolute;
       top: 20.74%;
@@ -166,7 +150,6 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      /* We'll store data-theme here for user messages only */
     }
 
     .aim-header {
@@ -196,17 +179,11 @@
       display: block; 
       margin-bottom: 2px;
     }
-
-    /* 
-     ANY .message.user => user message
-     We'll style highlight & font based on [data-theme] 
-    */
     .screen-container .message.user {
       background: #ddd;   /* fallback highlight if no theme */
       color: #000;
       font-family: sans-serif;
     }
-    /* WHEN data-theme='A/B/C/D' => override user message style */
     .screen-container[data-theme="A"] .message.user {
       background: #111;  /* subtle black highlight */
       color: #ff69b4;
@@ -228,7 +205,6 @@
       font-family: Verdana, sans-serif;
     }
 
-    /* The input area below the screen container */
     .input-over-keyboard {
       position: absolute;
       top: 63%;
@@ -262,13 +238,10 @@
   </style>
 </head>
 <body>
-  <!-- The rotate overlay -->
   <div class="rotate-overlay">
     <p>ROTATE UR PHONE 2 TALK 2 SMARTERGLEN<br><br>
     Or open this page on a wider screen.</p>
   </div>
-
-  <!-- LOGIN OVERLAY: username + theme pick -->
   <div class="login-overlay" id="loginOverlay">
     <div class="login-dialog">
       <h2>Sign Into GlenIM</h2>
@@ -293,7 +266,6 @@
         <div class="aim-header">SmarterGlen</div>
         <div class="messages" id="messages"></div>
       </div>
-      <!-- input area below the screen container -->
       <div class="input-over-keyboard">
         <input type="text" id="userInput" placeholder="Type message...">
         <button id="sendBtn">Send</button>
@@ -301,15 +273,12 @@
     </div>
   </div>
 
-  <!-- AUDIO FILES -->
   <audio id="sndIncoming" src="glenim.mp3" preload="auto"></audio>
   <audio id="sndOutgoing" src="glenim3.mp3" preload="auto"></audio>
 
   <script>
     let currentUser = "Anonymous";
     let selectedTheme = "";
-
-    /* On load, set up sign-in logic + theme selection */
     window.addEventListener('load', () => {
       const loginOverlay = document.getElementById('loginOverlay');
       const signInBtn = document.getElementById('signInBtn');
@@ -318,13 +287,12 @@
       const sndIncoming = document.getElementById('sndIncoming');
       const sndOutgoing = document.getElementById('sndOutgoing');
 
-      // THEME BOXES
       const themeBoxes = document.querySelectorAll('.theme-option');
       themeBoxes.forEach(box => {
         box.addEventListener('click', () => {
-          // Deselect others
+ 
           themeBoxes.forEach(b => b.classList.remove('selected'));
-          // Mark this one selected
+
           box.classList.add('selected');
           selectedTheme = box.getAttribute('data-theme');
         });
@@ -346,13 +314,11 @@
           sndOutgoing.currentTime = 0;
         }).catch(err => console.log('outgoing audio blocked:', err));
 
-        // 3) apply theme to chat container
         applyTheme(selectedTheme);
 
-        // 4) hide overlay
         loginOverlay.style.display = 'none';
 
-        // greet user
+
         addMessage('SmarterGLEN', `Welcome, ${currentUser}! I'm really fucking busy planning my art show so what do u wanna talk about?`);
       });
     });
@@ -363,8 +329,6 @@
       chatBox.setAttribute('data-theme', theme);
     }
 
-
-    /* SIMPLE CHAT LOGIC */
     const responses = [
       "Just come over and pick me up and take me to my art show like damn it doesnt have to be so complicated.",
       "BONOBO, THEE MIKE B, you—sounds like a plan!",
