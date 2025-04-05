@@ -152,21 +152,47 @@
     }
 
     /* The chat container that changes color / font only */
-    .screen-container {
-      position: absolute;
-      top: 20.74%;
-      left: 22.07%;
-      width: 29.25%;
-      height: 24.93%;
-      background: #fff;       /* default */
-      color: #000;            /* default text color */
-      font-family: sans-serif;/* default font */
-      border: 1px solid #333;
-      border-radius: 4px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+  .screen-container {
+  background: #fff;
+  color: #000;
+  font-family: sans-serif;
+}
+
+/* Non-user messages (SmarterChild) are always standard: */
+.message:not(.user) {
+  background: #eee;   /* light gray */
+  color: #000;
+  font-family: sans-serif; /* or whatever “standard font” you want */
+}
+
+/* Then, user messages vary by data-theme on the container: */
+.screen-container[data-theme="A"] .message.user {
+  background: #000;
+  color: #ff69b4;
+  font-family: "Trebuchet MS", sans-serif;
+}
+.screen-container[data-theme="B"] .message.user {
+  background: #fff;
+  color: #000;
+  font-family: sans-serif;
+}
+.screen-container[data-theme="C"] .message.user {
+  background: #001f3f;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+.screen-container[data-theme="D"] .message.user {
+  background: #000;
+  color: #39ff14;
+  font-family: Verdana, sans-serif;
+}
+
+/* If user never picked a theme, or default: */
+.screen-container:not([data-theme]) .message.user {
+  background: #ddd;
+  color: #000;
+  font-family: sans-serif;
+}
 
     .aim-header {
       background: #0055FF;
@@ -354,34 +380,8 @@
     /* APPLY THEME => only changes #chatContainer */
     function applyTheme(theme) {
       const chatBox = document.getElementById('chatContainer');
-      switch(theme) {
-        case 'A': // Hot pink on black, Trebuchet MS
-          chatBox.style.background = '#000';
-          chatBox.style.color = '#ff69b4';
-          chatBox.style.fontFamily = 'Trebuchet MS, sans-serif';
-          break;
-        case 'B': // Default
-          chatBox.style.background = '#fff';
-          chatBox.style.color = '#000';
-          chatBox.style.fontFamily = 'sans-serif';
-          break;
-        case 'C': // White text, navy background, Arial
-          chatBox.style.background = '#001f3f';
-          chatBox.style.color = '#fff';
-          chatBox.style.fontFamily = 'Arial, sans-serif';
-          break;
-        case 'D': // Neon green + black, Verdana
-          chatBox.style.background = '#000';
-          chatBox.style.color = '#39ff14';
-          chatBox.style.fontFamily = 'Verdana, sans-serif';
-          break;
         default:
           chatBox.removeAttribute('data-theme');
-          // if none selected or user didn't pick
-          chatBox.style.background = '#fff';
-          chatBox.style.color = '#000';
-          chatBox.style.fontFamily = 'sans-serif';
-      }
     }
 
     /* SIMPLE CHAT LOGIC */
@@ -407,20 +407,21 @@
       const userMessage = userInputField.value.trim();
       if (!userMessage) return;
       // add user message with .user class
-      addMessage(currentUser, userMessage, true); 
+addMessage(currentUser, userMessage, true); // user is true
       document.getElementById('sndOutgoing').play();
       userInputField.value = '';
 
       setTimeout(() => botReply(userMessage), 600);
     }
 
-    function addMessage(sender, text, isUser = false) {
-      const messagesEl = document.getElementById('messages');
-      const msgDiv = document.createElement('div');
-      msgDiv.classList.add('message');
-      if (isUser) msgDiv.classList.add('user'); // user highlight
+function addMessage(sender, text, isUser = false) {
+  const msgDiv = document.createElement('div');
+  msgDiv.classList.add('message');
+  if(isUser) msgDiv.classList.add('user');
 
-      msgDiv.innerHTML = `<span class='sender'>${sender}:</span>${text}`;
+  msgDiv.innerHTML = `<span class='sender'>${sender}:</span>${text}`;
+  // ...
+}
       messagesEl.appendChild(msgDiv);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
@@ -439,7 +440,7 @@
         reply = responses[Math.floor(Math.random() * responses.length)];
       }
 
-      addMessage('SmarterChild', reply);
+addMessage('SmarterChild', reply); // no third arg => false
       document.getElementById('sndIncoming').play();
     }
   </script>
