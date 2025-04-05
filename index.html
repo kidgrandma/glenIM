@@ -147,7 +147,8 @@
       </div>
     </div>
   </div>
-
+  <audio id="sndIncoming" src="glenim.mp3" preload="auto"></audio>
+<audio id="sndOutgoing" src="glenim3.mp3" preload="auto"></audio>
   <script>
     /* Basic fallback responses */
     const responses = [
@@ -168,14 +169,19 @@
     });
     sendBtn.addEventListener('click', handleSend);
 
-    function handleSend() {
-      const userMessage = userInputField.value.trim();
-      if (userMessage !== '') {
-        addMessage('You', userMessage);
-        userInputField.value = '';
-        setTimeout(() => botReply(userMessage), 600);
-      }
-    }
+function handleSend() {
+  const userMessage = userInputField.value.trim();
+  if (userMessage !== '') {
+    // add user message to chat
+    addMessage('You', userMessage);
+
+    // **after** adding user's message, play outgoing sound
+    document.getElementById('sndOutgoing').play();
+
+    userInputField.value = '';
+    setTimeout(() => botReply(userMessage), 600);
+  }
+}
 
     function addMessage(sender, text) {
       const messagesEl = document.getElementById('messages');
@@ -186,9 +192,9 @@
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    function botReply(userInput) {
-      const input = userInput.toLowerCase();
-      let reply;
+function botReply(userInput) {
+  const input = userInput.toLowerCase();
+  let reply;
       if (/where|when|location|time/.test(input)) {
         reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
       } else if (/who|perform|music|dj|artist/.test(input)) {
@@ -198,9 +204,10 @@
       } else {
         reply = responses[Math.floor(Math.random() * responses.length)];
       }
-      addMessage('SmarterChild', reply);
+addMessage('SmarterChild', reply);
     }
-
+  document.getElementById('sndIncoming').play();
+}
     window.addEventListener('load', () => {
       addMessage('SmarterChild', "Hey! I'm SmarterGLEN. Ask me about LOW-RES[HI-DEF]!");
     });
