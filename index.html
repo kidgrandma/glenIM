@@ -234,7 +234,7 @@ window.addEventListener('load', () => {
     addMessage('SmarterChild', `Welcome, ${currentUser}! Ask me about LOW-RES[HI-DEF]!`);
   });
 });
-    /* Basic fallback responses */
+ 
     const responses = [
       "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
       "BONOBO, THEE MIKE B, you—sounds like a plan!",
@@ -253,19 +253,18 @@ window.addEventListener('load', () => {
     });
     sendBtn.addEventListener('click', handleSend);
 
-function handleSend() {
-  const userMessage = userInputField.value.trim();
-  if (userMessage !== '') {
-    // add user message to chat
-    addMessage('You', userMessage);
+    function handleSend() {
+      const userMessage = userInputField.value.trim();
+      if (userMessage !== '') {
+        addMessage('You', userMessage);
 
-    // **after** adding user's message, play outgoing sound
-    document.getElementById('sndOutgoing').play();
+        // play outgoing
+        document.getElementById('sndOutgoing').play();
 
-    userInputField.value = '';
-    setTimeout(() => botReply(userMessage), 600);
-  }
-}
+        userInputField.value = '';
+        setTimeout(() => botReply(userMessage), 600);
+      }
+    }
 
     function addMessage(sender, text) {
       const messagesEl = document.getElementById('messages');
@@ -276,22 +275,27 @@ function handleSend() {
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-function botReply(userInput) {
-  const input = userInput.toLowerCase();
-  let reply;
+    // *** FIXED BOT REPLY ***
+    function botReply(userInput) {
+      const input = userInput.toLowerCase();
+      let reply;
 
-  if (/where|when|location|time/.test(input)) {
-    reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
-  } else if (/who|perform|music|dj|artist/.test(input)) {
-    reply = "BONOBO & THEE MIKE B plus more—party time!";
-  } else if (/rsvp|ticket|sign up|list/.test(input)) {
-    reply = "Email rsvp@hvw8.com to secure your spot.";
-  } else {
-    reply = responses[Math.floor(Math.random() * responses.length)];
-  }
+      if (/where|when|location|time/.test(input)) {
+        reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
+      } else if (/who|perform|music|dj|artist/.test(input)) {
+        reply = "BONOBO & THEE MIKE B plus more—party time!";
+      } else if (/rsvp|ticket|sign up|list/.test(input)) {
+        reply = "Email rsvp@hvw8.com to secure your spot.";
+      } else {
+        reply = responses[Math.floor(Math.random() * responses.length)];
+      }
 
-  addMessage('SmarterChild', reply); 
-} 
+      // 1) Actually display the bot message
+      addMessage('SmarterChild', reply);
+
+      // 2) Now play the 'incoming' sound
+      document.getElementById('sndIncoming').play();
+    }
   </script>
 </body>
 </html>
