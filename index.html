@@ -2,60 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LOW-RES[HI-DEF] Sidekick Chat</title>
+  <title>Sidekick Chat - Centered & Semi-Transparent Input</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* 1) Basic Reset */
+    /* 1) Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* 2) Page background with glenbackground.png */
+    /* 2) Page background */
     body {
-      background: url('images/glenbackground.png') center/cover no-repeat;
+      background: url("images/glenbackground.png") center/cover no-repeat;
+      /* 
+         Because the user wants the phone centered:
+         We'll use .outer flex container for centering
+      */
+    }
+
+    /* 3) Outer container for centering the phone */
+    .outer {
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      font-family: 'Verdana', sans-serif;
+      min-height: 100vh;  /* full screen vertical center */
+      /* OPTIONAL: left padding if you want phone even more to the right
+         padding-left: 80px;  
+      */
     }
 
-    /* 3) Sidekick wrapper with aspect-ratio ~ phone dimension */
+    /* 4) The phone wrapper with aspect ratio */
     .wrapper {
       position: relative;
-      /* For example, if phone is 1366x1080 => aspect-ratio: 1366 / 1080 (~1.2648) */
-      aspect-ratio: 1366 / 1080;  
-      width: 90vw;             
-      max-width: 1366px;      
-
-      background: url('images/phone.png') center/contain no-repeat;
+      aspect-ratio: 1366 / 1080; /* e.g., phone dimensions */
+      width: 90vw;               /* scale to 90% of viewport width */
+      max-width: 1366px;         /* don't exceed actual phone width */
+      background: url("images/phone.png") center/contain no-repeat;
       border: 2px solid #444;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
 
-    /* 4) The chat screen overlay (using your final percentages) */
+    /* 5) Chat screen container (messages only, no input) */
     .screen-container {
       position: absolute;
-      top: 20.74%;
+      top: 20.74%;   /* your updated alignment percentages */
       left: 22.07%;
       width: 29.25%;
       height: 24.93%;
-
-      /* 
-        Set up a flex column layout so the header + messages + input 
-        can stack vertically within this screen container 
-      */
+      background: #fff;
+      border: 1px solid #333;
+      border-radius: 4px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      background: #ffffff;     /* remove or style if you'd like transparency */
-      border: 1px solid #333;  /* optional visual border */
-      border-radius: 5px;
-      overflow: hidden;
     }
 
-    /* 5) Header area (like an AIM title bar) */
     .aim-header {
       background: #0055FF;
       color: #fff;
@@ -66,14 +68,14 @@
       flex-shrink: 0;
     }
 
-    /* 6) Messages area (scrollable) */
     .messages {
-      flex: 1;             /* fill remaining space */
+      flex: 1;
       overflow-y: auto;
-      background: #F8F8F8; /* slight gray for chat background */
+      background: #F8F8F8;
       font-size: 13px;
       padding: 6px;
     }
+
     .message {
       margin-bottom: 8px;
       line-height: 1.3;
@@ -84,58 +86,71 @@
       margin-bottom: 2px;
     }
 
-    /* 7) Input field container (stays at bottom) */
-    .chat-input {
-      display: flex;
-      border-top: 1px solid #ccc;
-      background: #eee;
+    /* 6) Input over the keyboard, semi-transparent */
+    .input-over-keyboard {
+      position: absolute;
+      /*
+        You can adjust these values so the text box sits exactly over the keyboard area.
+        The phone ratio is ~1366x1080, so experiment in DevTools
+      */
+      top: 50%;      /* roughly halfway down device or more if you want lower */
+      left: 22%;     /* horizontally aligned with the screen container, or tweak */
+      width: 29%;    /* same width as .screen-container for symmetrical look */
+      background: rgba(255,255,255,0.5);
+      border: 1px solid #aaa;
+      border-radius: 4px;
       padding: 4px;
-      flex-shrink: 0;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
     }
-    .chat-input input {
-      flex: 1;
-      padding: 6px;
+
+    .input-over-keyboard input {
+      width: 100%;
       font-size: 13px;
+      padding: 6px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      box-sizing: border-box;
+      background: #fff;
     }
   </style>
 </head>
 <body>
-  <!-- The phone wrapper -->
-  <div class="wrapper">
+  <div class="outer">
     
-    <!-- The screen overlay with chat inside -->
-    <div class="screen-container">
+    <div class="wrapper">
       
-      <div class="aim-header">SmarterChild</div>
+      <!-- Chat messages (no input here) -->
+      <div class="screen-container">
+        <div class="aim-header">SmarterChild</div>
+        <div class="messages" id="messages"></div>
+      </div>
       
-      <div class="messages" id="messages"></div>
-      
-      <div class="chat-input">
-        <input type="text" id="userInput" placeholder="Type a message and press Enter...">
+      <!-- Semi-transparent input over the phone keyboard area -->
+      <div class="input-over-keyboard">
+        <input type="text" id="userInput" placeholder="Type message, press Enter...">
       </div>
 
-    </div> <!-- End screen-container -->
-  </div> <!-- End wrapper -->
+    </div> <!-- /wrapper -->
+    
+  </div> <!-- /outer -->
 
   <script>
-    // Basic fallback responses for your event
+    // Basic fallback responses
     const responses = [
       \"Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!\",
       \"BONOBO, THEE MIKE B, you—sounds like a plan!\",
       \"I only know about LOW-RES[HI-DEF] at HVW8.\",
-      \"Missing out is not an option. RSVP! Email rsvp@hvw8.com.\",
-      \"HVW8 Gallery, 661 N. Spaulding Ave., April 9, 6–10pm.\"
+      \"RSVP or regret it—your choice.\",
+      \"HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9.\"
     ];
 
-    // Hook into user input field
     const userInputField = document.getElementById('userInput');
-    
+
+    // We'll use 'keydown' or 'keypress' approach to detect Enter
     userInputField.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         const userMessage = e.target.value.trim();
-        if (userMessage) {
+        if (userMessage !== '') {
           addMessage('You', userMessage);
           e.target.value = '';
           setTimeout(() => botReply(userMessage), 600);
@@ -143,40 +158,37 @@
       }
     });
 
-    // Function to render messages in .messages
+    // Add message to the .messages container
     function addMessage(sender, text) {
       const messagesEl = document.getElementById('messages');
       const msgDiv = document.createElement('div');
       msgDiv.classList.add('message');
-      
       msgDiv.innerHTML = `
         <span class='sender'>${sender}:</span>
         ${text}
       `;
       messagesEl.appendChild(msgDiv);
-      messagesEl.scrollTop = messagesEl.scrollHeight; // auto-scroll to bottom
+      messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    // Simple chatbot logic
+    // Bot logic
     function botReply(userInput) {
       const input = userInput.toLowerCase();
       let reply;
 
       if (/where|when|location|time/.test(input)) {
-        reply = \"LOW-RES[HI-DEF] at HVW8 Gallery, April 9, 6–10pm.\";
+        reply = \"LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.\";
       } else if (/who|perform|music|dj|artist/.test(input)) {
-        reply = \"BONOBO + THEE MIKE B and more. All star cast!\";
+        reply = \"BONOBO & THEE MIKE B plus more—party time!\";
       } else if (/rsvp|ticket|sign up|list/.test(input)) {
-        reply = \"Email rsvp@hvw8.com to secure your spot!\";
+        reply = \"Email rsvp@hvw8.com to secure your spot.\";
       } else {
-        // Fallback random response
         reply = responses[Math.floor(Math.random() * responses.length)];
       }
-
       addMessage('SmarterChild', reply);
     }
 
-    // Greet user on load
+    // Initial greeting
     window.addEventListener('load', () => {
       addMessage('SmarterChild', \"Hey! I'm SmarterChild. Ask me about LOW-RES[HI-DEF]!\");
     });
