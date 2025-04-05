@@ -275,8 +275,8 @@
   <audio id="sndOutgoing" src="glenim3.mp3" preload="auto"></audio>
 
   <script>
-    let currentUser = \"Anonymous\";
-    let selectedTheme = \"\";
+    let currentUser = "Anonymous";
+    let selectedTheme = "\";
 
     /* On load, set up sign-in logic + theme selection */
     window.addEventListener('load', () => {
@@ -362,11 +362,11 @@
 
     /* SIMPLE CHAT LOGIC */
     const responses = [
-      \"Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!\",
-      \"BONOBO, THEE MIKE B, you—sounds like a plan!\",
-      \"I only know about LOW-RES[HI-DEF] at HVW8.\",
-      \"RSVP or regret it—your choice.\",
-      \"HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9.\"
+      "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
+      "BONOBO, THEE MIKE B, you—sounds like a plan!",
+      "I only know about LOW-RES[HI-DEF] at HVW8.",
+      "RSVP or regret it—your choice.",
+      "HVW8 Gallery, 661 N. Spaulding Ave., 6–10PM on April 9."
     ];
 
     const userInputField = document.getElementById('userInput');
@@ -406,11 +406,11 @@
       let reply;
 
       if (/where|when|location|time/.test(input)) {
-        reply = \"LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.\";
+        reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
       } else if (/who|perform|music|dj|artist/.test(input)) {
-        reply = \"BONOBO & THEE MIKE B plus more—party time!\";
+        reply = "BONOBO & THEE MIKE B plus more—party time!";
       } else if (/rsvp|ticket|sign up|list/.test(input)) {
-        reply = \"Email rsvp@hvw8.com to secure your spot.\";
+        reply = "Email rsvp@hvw8.com to secure your spot.";
       } else {
         reply = responses[Math.floor(Math.random() * responses.length)];
       }
