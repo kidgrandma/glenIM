@@ -152,47 +152,22 @@
     }
 
     /* The chat container that changes color / font only */
-  .screen-container {
-  background: #fff;
-  color: #000;
-  font-family: sans-serif;
-}
-
-/* Non-user messages (SmarterChild) are always standard: */
-.message:not(.user) {
-  background: #eee;   /* light gray */
-  color: #000;
-  font-family: sans-serif; /* or whatever “standard font” you want */
-}
-
-/* Then, user messages vary by data-theme on the container: */
-.screen-container[data-theme="A"] .message.user {
-  background: #000;
-  color: #ff69b4;
-  font-family: "Trebuchet MS", sans-serif;
-}
-.screen-container[data-theme="B"] .message.user {
-  background: #fff;
-  color: #000;
-  font-family: sans-serif;
-}
-.screen-container[data-theme="C"] .message.user {
-  background: #001f3f;
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-.screen-container[data-theme="D"] .message.user {
-  background: #000;
-  color: #39ff14;
-  font-family: Verdana, sans-serif;
-}
-
-/* If user never picked a theme, or default: */
-.screen-container:not([data-theme]) .message.user {
-  background: #ddd;
-  color: #000;
-  font-family: sans-serif;
-}
+.screen-container {
+      position: absolute;
+      top: 20.74%;
+      left: 22.07%;
+      width: 29.25%;
+      height: 24.93%;
+      background: #fff;
+      color: #000;
+      font-family: sans-serif;
+      border: 1px solid #333;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      /* We'll store data-theme here for user messages only */
+    }
 
     .aim-header {
       background: #0055FF;
@@ -203,7 +178,6 @@
       padding: 4px;
       flex-shrink: 0;
     }
-
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -212,18 +186,49 @@
       padding: 6px;
     }
     .message {
-      margin-bottom: 8px; 
+      margin-bottom: 8px;
       line-height: 1.3;
-      padding: 4px; /* so we can see highlight background if we do it */
-      border-radius: 4px; 
+      border-radius: 4px;
+      padding: 4px;
     }
     .sender {
       font-weight: bold; 
       display: block; 
-      margin-bottom: 2px; 
+      margin-bottom: 2px;
     }
 
-    /* The input area below the phone screen */
+    /* 
+     ANY .message.user => user message
+     We'll style highlight & font based on [data-theme] 
+    */
+    .screen-container .message.user {
+      background: #ddd;   /* fallback highlight if no theme */
+      color: #000;
+      font-family: sans-serif;
+    }
+    /* WHEN data-theme='A/B/C/D' => override user message style */
+    .screen-container[data-theme="A"] .message.user {
+      background: #111;  /* subtle black highlight */
+      color: #ff69b4;
+      font-family: "Trebuchet MS", sans-serif;
+    }
+    .screen-container[data-theme="B"] .message.user {
+      background: #eee;
+      color: #000;
+      font-family: sans-serif;
+    }
+    .screen-container[data-theme="C"] .message.user {
+      background: #002853;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .screen-container[data-theme="D"] .message.user {
+      background: #111;
+      color: #39ff14;
+      font-family: Verdana, sans-serif;
+    }
+
+    /* The input area below the screen container */
     .input-over-keyboard {
       position: absolute;
       top: 63%;
@@ -253,30 +258,7 @@
       background: #ddd;
       cursor: pointer;
     }
-    .input-over-keyboard button:hover {
-      background: #ccc;
-    }
-     .screen-container[data-theme="A"] .message.user {
-      background: #111;  /* a subtle black highlight */
-      color: #ff69b4; 
-    }
-    .screen-container[data-theme="B"] .message.user {
-      background: #ddd;  /* subtle grey highlight */
-      color: #000;
-    }
-    .screen-container[data-theme="C"] .message.user {
-      background: #002853; /* slightly lighter navy highlight */
-      color: #fff;
-    }
-    .screen-container[data-theme="D"] .message.user {
-      background: #111; /* black highlight */
-      color: #39ff14;
-    }
-    /* default theme if none chosen */
-    .screen-container:not([data-theme]) .message.user {
-      background: #e2e2e2;
-      color: #000;
-    }
+    .input-over-keyboard button:hover { background: #ccc; }
   </style>
 </head>
 <body>
@@ -351,9 +333,7 @@
       signInBtn.addEventListener('click', () => {
         // 1) username
         const typedName = usernameInput.value.trim();
-        if (typedName !== "") {
-          currentUser = typedName;
-        }
+         if (typedName) currentUser = typedName;
 
         // 2) audio unlock
         sndIncoming.play().then(() => {
@@ -377,12 +357,12 @@
       });
     });
 
-    /* APPLY THEME => only changes #chatContainer */
     function applyTheme(theme) {
       const chatBox = document.getElementById('chatContainer');
-        default:
-          chatBox.removeAttribute('data-theme');
+      // set data-theme => used in CSS to style .message.user
+      chatBox.setAttribute('data-theme', theme);
     }
+
 
     /* SIMPLE CHAT LOGIC */
     const responses = [
@@ -396,41 +376,37 @@
     const userInputField = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
 
-    userInputField.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
-        handleSend();
-      }
+   userInputField.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSend();
     });
     sendBtn.addEventListener('click', handleSend);
 
     function handleSend() {
       const userMessage = userInputField.value.trim();
       if (!userMessage) return;
-      // add user message with .user class
-addMessage(currentUser, userMessage, true); // user is true
+      addMessage(currentUser, userMessage, true); 
       document.getElementById('sndOutgoing').play();
       userInputField.value = '';
-
       setTimeout(() => botReply(userMessage), 600);
     }
 
-function addMessage(sender, text, isUser = false) {
-  const msgDiv = document.createElement('div');
-  msgDiv.classList.add('message');
-  if(isUser) msgDiv.classList.add('user');
+ffunction addMessage(sender, text, isUser=false) {
+      const messagesEl = document.getElementById('messages');
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message');
+      // if user => highlight with .user
+      if(isUser) msgDiv.classList.add('user');
 
-  msgDiv.innerHTML = `<span class='sender'>${sender}:</span>${text}`;
-  // ...
-}
+      msgDiv.innerHTML = `<span class='sender'>${sender}:</span>${text}`;
       messagesEl.appendChild(msgDiv);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    function botReply(userInput) {
-      const input = userInput.toLowerCase();
-      let reply;
 
-      if (/where|when|location|time/.test(input)) {
+    function botReply(userInput) {
+      let reply;
+      const lower = userInput.toLowerCase();
+      if (/where|when|location|time/.test(lower)) {
         reply = "LOW-RES[HI-DEF] at HVW8 Gallery, 6–10PM on April 9.";
       } else if (/who|perform|music|dj|artist/.test(input)) {
         reply = "BONOBO & THEE MIKE B plus more—party time!";
