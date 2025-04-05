@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sidekick Chat - Centered & Semi-Transparent Input</title>
+  <title>GLENJAMN INSTANT MESSENGER</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* 1) Reset */
@@ -93,7 +93,7 @@
         You can adjust these values so the text box sits exactly over the keyboard area.
         The phone ratio is ~1366x1080, so experiment in DevTools
       */
-      top: 50%;      /* roughly halfway down device or more if you want lower */
+      top: 80%;      /* roughly halfway down device or more if you want lower */
       left: 22%;     /* horizontally aligned with the screen container, or tweak */
       width: 29%;    /* same width as .screen-container for symmetrical look */
       background: rgba(255,255,255,0.5);
@@ -125,14 +125,11 @@
         <div class="messages" id="messages"></div>
       </div>
       
-      <!-- Semi-transparent input over the phone keyboard area -->
       <div class="input-over-keyboard">
         <input type="text" id="userInput" placeholder="Type message, press Enter...">
       </div>
-
-    </div> <!-- /wrapper -->
-    
-  </div> <!-- /outer -->
+    </div>
+  </div>
 
   <script>
     // Basic fallback responses
@@ -146,32 +143,28 @@
 
     const userInputField = document.getElementById('userInput');
 
-    // We'll use 'keydown' or 'keypress' approach to detect Enter
-    userInputField.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
+    // Use 'keypress' + keyCode 13 for better Safari support
+    userInputField.addEventListener('keypress', function(e) {
+      if (e.keyCode === 13) {
         const userMessage = e.target.value.trim();
         if (userMessage !== '') {
           addMessage('You', userMessage);
           e.target.value = '';
+          // Provide slight delay for realism
           setTimeout(() => botReply(userMessage), 600);
         }
       }
     });
 
-    // Add message to the .messages container
     function addMessage(sender, text) {
       const messagesEl = document.getElementById('messages');
       const msgDiv = document.createElement('div');
       msgDiv.classList.add('message');
-      msgDiv.innerHTML = `
-        <span class='sender'>${sender}:</span>
-        ${text}
-      `;
+      msgDiv.innerHTML = `<span class='sender'>${sender}:</span>${text}`;
       messagesEl.appendChild(msgDiv);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    // Bot logic
     function botReply(userInput) {
       const input = userInput.toLowerCase();
       let reply;
@@ -188,9 +181,9 @@
       addMessage('SmarterChild', reply);
     }
 
-    // Initial greeting
+    // Initial greeting on page load
     window.addEventListener('load', () => {
-      addMessage('SmarterChild', \"Hey! I'm SmarterChild. Ask me about LOW-RES[HI-DEF]!\");
+      addMessage('SmarterChild', \"Hey! I'm SmarterGLEN. Ask me about LOW-RES[HI-DEF]!\");
     });
   </script>
 </body>
