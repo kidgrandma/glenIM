@@ -81,23 +81,76 @@
   max-width: 90vw;
 }
 
-.login-dialog input {
-  width: 80%;
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-}
+   .login-dialog input {
+      width: 80%;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: none;
+    }
 
-.login-dialog button {
-  background: #00ffcc;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-weight: bold;
-}
+    .login-dialog button {
+      background: #00ffcc;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 0.5rem;
+      border-radius: 4px;
+    }
+    .login-dialog button:hover {
+      background: #00e6b8;
+    }
 
-.login-dialog button:hover {
-  background: #00e6b8;
-}
+    /* THEME PREVIEW BOXES */
+    .theme-choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .theme-option {
+      width: 70px;
+      height: 40px;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .theme-option:hover {
+      border-color: #ff0;
+    }
+    /* highlight selected box */
+    .theme-option.selected {
+      border-color: #00ffcc !important;
+    }
+
+    /* Four style previews: A, B, C, D */
+    .themeA { 
+      background: #000; 
+      color: #ff69b4; 
+      font-family: "Trebuchet MS", sans-serif;
+    }
+    .themeB {
+      background: #fff;
+      color: #000;
+      font-family: sans-serif;
+    }
+    .themeC {
+      background: #001f3f; /* navy */
+      color: #fff;
+      font-family: "Arial", sans-serif;
+    }
+    .themeD {
+      background: #000;
+      color: #39ff14;
+      font-family: "Verdana", sans-serif;
+    }
+
     /* ... your chat layout below ... */
     .screen-container {
       position: absolute;
@@ -105,7 +158,9 @@
       left: 22.07%;
       width: 29.25%;
       height: 24.93%;
-      background: #fff;
+      background: #fff;       /* default */
+      color: #000;            /* default text color */
+      font-family: sans-serif;/* default font */
       border: 1px solid #333;
       border-radius: 4px;
       display: flex;
@@ -171,14 +226,23 @@
     <p>ROTATE UR PHONE 2 TALK 2 SMARTERGLEN<br><br>
     Or open this page on a wider screen.</p>
   </div>
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-dialog">
-    <h2>Sign Into GlenIM</h2>
-    <label for="usernameInput">Username:</label>
-    <input type="text" id="usernameInput" placeholder="Enter your name">
-    <button id="signInBtn">Sign In</button>
+ <div class="login-overlay" id="loginOverlay">
+    <div class="login-dialog">
+      <h2>Sign Into GlenIM</h2>
+      <label for="usernameInput">Username:</label><br>
+      <input type="text" id="usernameInput" placeholder="Enter your name">
+      
+      <p>Pick a Theme:</p>
+      <div class="theme-choices">
+        <div class="theme-option themeA" data-theme="A">TEXT</div>
+        <div class="theme-option themeB" data-theme="B">TEXT</div>
+        <div class="theme-option themeC" data-theme="C">TEXT</div>
+        <div class="theme-option themeD" data-theme="D">TEXT</div>
+      </div>
+
+      <button id="signInBtn">Sign In</button>
+    </div>
   </div>
-</div>
   <div class="outer">
     <div class="wrapper">
       <!-- Chat messages -->
@@ -199,7 +263,7 @@
 
     // Global variable to store the user’s chosen username
 let currentUser = "Anonymous";
-
+let selectedTheme = "";
 // Once the DOM loads
 window.addEventListener('load', () => {
   const loginOverlay = document.getElementById('loginOverlay');
@@ -208,7 +272,17 @@ window.addEventListener('load', () => {
 
   const sndIncoming = document.getElementById('sndIncoming');
   const sndOutgoing = document.getElementById('sndOutgoing');
-
+const themeBoxes = document.querySelectorAll('.theme-option');
+      themeBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+          // unselect other boxes
+          themeBoxes.forEach(b => b.classList.remove('selected'));
+          // mark this box as selected
+          box.classList.add('selected');
+          // store which theme it corresponds to
+          selectedTheme = box.getAttribute('data-theme');
+        });
+      });
   signInBtn.addEventListener('click', () => {
     // 1) Grab typed username
     const typedName = usernameInput.value.trim();
@@ -226,7 +300,7 @@ window.addEventListener('load', () => {
       sndOutgoing.pause();
       sndOutgoing.currentTime = 0;
     }).catch(err => console.log('outgoing audio blocked:', err));
-
+        applyTheme(selectedTheme);
     // 3) Hide the login overlay
     loginOverlay.style.display = 'none';
 
@@ -234,7 +308,36 @@ window.addEventListener('load', () => {
     addMessage('SmarterChild', `Welcome, ${currentUser}! Ask me about LOW-RES[HI-DEF]!`);
   });
 });
- 
+     function applyTheme(theme) {
+      const chatBox = document.getElementById('chatContainer');
+      switch(theme) {
+        case 'A': // hot pink on black (Trebuchet)
+          chatBox.style.background = '#000';
+          chatBox.style.color = '#ff69b4';
+          chatBox.style.fontFamily = 'Trebuchet MS, sans-serif';
+          break;
+        case 'B': // Default
+          chatBox.style.background = '#fff';
+          chatBox.style.color = '#000';
+          chatBox.style.fontFamily = 'sans-serif';
+          break;
+        case 'C': // White text, navy background (Arial)
+          chatBox.style.background = '#001f3f';
+          chatBox.style.color = '#fff';
+          chatBox.style.fontFamily = 'Arial, sans-serif';
+          break;
+        case 'D': // Neon green + black (Verdana)
+          chatBox.style.background = '#000';
+          chatBox.style.color = '#39ff14';
+          chatBox.style.fontFamily = 'Verdana, sans-serif';
+          break;
+        default: 
+          // default 
+          chatBox.style.background = '#fff';
+          chatBox.style.color = '#000';
+          chatBox.style.fontFamily = 'sans-serif';
+      }
+    }
     const responses = [
       "Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!",
       "BONOBO, THEE MIKE B, you—sounds like a plan!",
@@ -289,11 +392,7 @@ window.addEventListener('load', () => {
       } else {
         reply = responses[Math.floor(Math.random() * responses.length)];
       }
-
-      // 1) Actually display the bot message
       addMessage('SmarterChild', reply);
-
-      // 2) Now play the 'incoming' sound
       document.getElementById('sndIncoming').play();
     }
   </script>
