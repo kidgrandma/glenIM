@@ -5,12 +5,13 @@
   <title>Responsive Sidekick Chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Basic Reset */
+    /* 1) Basic Reset */
     * {
-      margin: 0; 
-      padding: 0; 
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
+
     body {
       background: #ccc;
       display: flex;
@@ -20,157 +21,50 @@
       font-family: 'Verdana', sans-serif;
     }
 
-    /* WRAPPER with aspect-ratio for the phone image */
+    /* 2) Wrapper with aspect-ratio matching 1366x1080 ~ 1.2648 */
     .wrapper {
       position: relative;
-      /* 1366x1080 => ~1.2648 ratio */
-      aspect-ratio: 1366 / 1080;
-      width: 90vw;           /* scale up to 90% of viewport width */
-      max-width: 1366px;     /* don’t exceed the actual phone width */
+      aspect-ratio: 1366 / 1080; /* or simply 1.2648 */
+      width: 90vw;               /* up to 90% of viewport width */
+      max-width: 1366px;         /* but no bigger than 1366px */
+
       background: url('images/phone.png') center/contain no-repeat;
       border: 2px solid #444;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
 
-    /* This is your chat screen overlay at the exact position you measured */
+    /* 3) Screen container positioned via percentages from your Canva data */
     .screen-container {
       position: absolute;
-      top: 7.74%;       /* ~ 83.7px / 1080 */
-      left: 25.07%;     /* ~ 342.6px / 1366 */
-      width: 32.25%;    /* ~ 440.5px / 1366 */
-      height: 26.93%;   /* ~ 290.8px / 1080 */
-      background: rgba(0, 255, 0, 0.2); /* debugging color; remove later */
-      border: 2px solid limegreen;      /* debugging border; remove later */
+      /* (X=342.6, Y=83.7) => top: ~7.74%, left: ~25.07% */
+      top: 7.74%;
+      left: 25.07%;
+      /* (Width=440.5, Height=290.8) => width: ~32.25%, height: ~26.93% */
+      width: 32.25%;
+      height: 26.93%;
+
+      background: rgba(0, 255, 0, 0.2); /* debugging color to see alignment */
+      border: 2px solid limegreen;      /* remove once aligned */
       overflow: hidden;
     }
 
-    /* OPTIONAL: You can put your AIM chat inside .screen-container, or
-       create separate elements for a chat window + input. 
-       This example is just the green square so you can confirm alignment. */
+    /* If you want to build out your AIM chat, nest it inside .screen-container.
+       Example:
+       .aim-window {
+         height: 100%;
+         overflow-y: auto;
+         ...
+       }
+    */
   </style>
 </head>
 <body>
+
   <div class="wrapper">
     <div class="screen-container">
-      <!-- Insert your chat HTML here, e.g. your AIM window and input. -->
-    </div>
-  </div>
-</body>
-</html>
-
-    .aim-header {
-      background: #0055FF;
-      color: #fff;
-      font-weight: bold;
-      font-size: 14px;
-      text-align: center;
-      padding: 6px;
-    }
-
-    .aim-window {
-      /* Fill all space below header */
-      height: calc(100% - 32px); /* Subtract header height + padding */
-      background: #F8F8F8;
-      padding: 8px;
-      overflow-y: auto;
-      font-size: 13px;
-    }
-
-    /* MESSAGES */
-    .message {
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
-    .sender {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    /* INPUT BELOW THE SCREEN (simulate the keyboard area) */
-    .input-container {
-      position: absolute;
-      top: 290px;   /* Just below the 160px screen’s bottom (120 + 160 = 280) + extra margin */
-      left: 200px;  /* match .screen-container’s left so it lines up nicely */
-      width: 500px;
-    }
-    #userInput {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 13px;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="sidekick-frame">
-    <!-- Screen area for the chat -->
-    <div class="screen-container" id="chatScreen">
-      <div class="aim-header">SmarterChild</div>
-      <div class="aim-window" id="messages"></div>
-    </div>
-
-    <!-- Input field for user messages -->
-    <div class="input-container">
-      <input type="text" id="userInput" placeholder="Type message, press Enter...">
+      <!-- Insert your chat code here (AIM window, etc.) once aligned -->
     </div>
   </div>
 
-  <script>
-    // Basic fallback responses
-    const responses = [
-      \"Did you RSVP yet for LOW-RES[HI-DEF]? April 9th, HVW8 Gallery—don't miss it!\",
-      \"BONOBO, THEE MIKE B, you—party time.\",
-      \"I only know about LOW-RES[HI-DEF]. That’s my job.\",
-      \"RSVP or regret it—your choice.\",
-      \"Location: HVW8 Gallery, 661 N. Spaulding Ave. April 9th, 6-10PM.\"
-    ];
-
-    const userInputField = document.getElementById('userInput');
-
-    userInputField.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        const userMessage = e.target.value.trim();
-        if (userMessage !== '') {
-          addMessage(\"You\", userMessage);
-          e.target.value = \"\";
-          setTimeout(() => botReply(userMessage), 600);
-        }
-      }
-    });
-
-    function addMessage(sender, text) {
-      const messagesEl = document.getElementById('messages');
-      const msgDiv = document.createElement('div');
-      msgDiv.classList.add('message');
-      msgDiv.innerHTML = `<span class='sender'>${sender}:</span>${text}`;
-      messagesEl.appendChild(msgDiv);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-
-    function botReply(userInput) {
-      const input = userInput.toLowerCase();
-      let reply;
-
-      if (/where|when|location/.test(input)) {
-        reply = \"LOW-RES[HI-DEF] at HVW8 Gallery. April 9th, 6-10PM!\";
-      } else if (/who|perform|music|dj|artist/.test(input)) {
-        reply = \"BONOBO & THEE MIKE B headlining—plus more!\";        
-      } else if (/rsvp|ticket|sign up|list/.test(input)) {
-        reply = \"Just email rsvp@hvw8.com, easy as that!\";
-      } else {
-        reply = responses[Math.floor(Math.random() * responses.length)];
-      }
-
-      addMessage(\"SmarterChild\", reply);
-    }
-
-    // Greeting message on load
-    window.addEventListener('load', () => {
-      addMessage(\"SmarterChild\", \"Hey there! This is your T-Mobile Sidekick. Ask me about the event!\");
-    });
-  </script>
 </body>
 </html>
